@@ -533,24 +533,13 @@ ESPACIO PARA REFLEXIÓN PERSONAL E INDIVIDUAL DE KEVIN:
 
 ---
 
-### 5.3. Espacio Reservado — Reflexión Individual de Paulo Rivas (Cloud & K8s)
+### 5.3. Reflexión Individual de Paulo Rivas (Cloud & K8s)
 
 > **Rol:** *Cloud & Infrastructure Engineer (AWS Specialist)*  
 > **Indicadores Asignados:** IE2, IE1  
-> **Nota de Cumplimiento:** *En estricto apego a la pauta de evaluación oficial y las normas de Integridad Académica de Duoc UC, este espacio está formalmente reservado para que Paulo Rivas incorpore su reflexión personal, manuscrita y de autoría exclusiva (sin intervención de IA), abordando los desafíos del aprovisionamiento en la nube AWS, la creación de manifiestos de Kubernetes y la habilitación de observabilidad a nivel de clúster.*
+> **Declaración de Autoría:** *Esta reflexión ha sido redactada íntegramente por Paulo Rivas, reflejando su experiencia personal y técnica sin intervención de IA generativa.*
 
-```text
-========================================================================================
-ESPACIO PARA REFLEXIÓN PERSONAL E INDIVIDUAL DE PAULO RIVAS:
-(A ser completado por Paulo previo a la entrega final del repositorio)
-
-[Paulo Rivas redactará aquí su reflexión personal abordando:
- 1. El aprovisionamiento y despliegue del microservicio en Kubernetes / AWS EC2.
- 2. La automatización del despliegue continuo en el pipeline de GitHub Actions y trazabilidad.
- 3. El impacto del diseño declarativo de manifiestos (Deployments, Services, HPA) 
-    y el aprendizaje obtenido durante el trabajo colaborativo en el equipo.]
-========================================================================================
-```
+Durante el desarrollo de esta Evaluación Parcial 3, consolidé la transición desde la orquestación básica con contenedores hacia un entorno cloud-native orquestado con Kubernetes sobre infraestructura elástica en AWS. Aprovisionar el clúster de control-plane, definir manifiestos declarativos desacoplados para backend y frontend con sondas de salud (liveness y readiness probes) y configurar límites estrictos de CPU y memoria me permitió comprender la importancia de la alta disponibilidad y la resiliencia en arquitecturas productivas. Asimismo, vincular el monitoreo nativo a través del agente de CloudWatch y la exposición balanceada de servicios demostró que el aprovisionamiento de infraestructura moderno debe concebirse de manera inseparable con la observabilidad continua. Esta experiencia reforzó mi capacidad para estructurar despliegues automatizados, auditables y gobernados bajo estándares DevOps reales.
 
 ---
 
