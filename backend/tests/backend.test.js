@@ -19,7 +19,7 @@ describe('Suite de Pruebas Backend VI CITY - Microservicio (Alexsander Rosales)'
     assert.strictEqual(res.status, 200);
 
     const body = await res.json();
-    assert.strictEqual(body.status, 'falla_controlada_ie6'); // 🛑 INYECCION DE FALLA CONTROLADA (IE6)
+    assert.strictEqual(body.status, 'ok');
     assert.strictEqual(body.author, 'Alexsander Rosales');
     assert.strictEqual(typeof body.uptimeSeconds, 'number');
     assert.strictEqual(typeof body.memoryUsageMB, 'object');
