@@ -1,0 +1,4 @@
+# Ignorar falsos positivos de sonar.projectKey
+ce5dd2390ea67bf1e1cb07d14eeb8d83c17ab1f1:sonar-project.properties:generic-api-key:2
+be8563e7f2b3e27e412ef8c775ce99b2c3db5f0f:sonar-project.properties:generic-api-key:2
+ce5dd2390ea67bf1e1cb07d14eeb8d83c17ab1f1:docs/CHECKLIST_EP3.md:generic-api-key:112

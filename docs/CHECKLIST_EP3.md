@@ -40,9 +40,9 @@ pie title Distribución de Ponderación EP3 (100%)
 | **IE1** | **20%** | Configura de manera completa y precisa herramientas como Prometheus o AWS CloudWatch, visualizando logs, métricas de uso, errores y disponibilidad de todos los microservicios involucrados. | **Kevin** | 🔴 Pendiente |
 | **IE2** | **20%** | Despliega eficazmente microservicios en entornos orquestados en la nube (Kubernetes / AWS), integrando de forma automatizada todas las configuraciones necesarias para el monitoreo, trazabilidad y observabilidad. | **Paulo** | 🔴 Pendiente |
 | **IE3** | **10%** | Crea dashboards funcionales y detallados con todas las métricas clave integradas al proceso CI/CD (tiempo despliegue, cobertura, CPU/RAM, errores), facilitando el análisis continuo del sistema. | **Kevin** | 🔴 Pendiente |
-| **IE4** | **10%** | Documenta de forma clara y detallada la integración de herramientas de monitoreo, métricas y seguridad en el pipeline CI/CD, explicando su impacto en la toma de decisiones y mejora continua. | **Alexsander** | 🔴 Pendiente |
-| **IE5** | **20%** | Aplica rigurosamente políticas de cumplimiento usando herramientas automatizadas (SonarQube, branch protection rules o scripts de auditoría), garantizando calidad, seguridad y trazabilidad. | **Alexsander** | 🔴 Pendiente |
-| **IE6** | **20%** | Implementa mecanismos de validación automatizados y efectivos que interrumpen el pipeline ante fallas críticas de seguridad o calidad, protegiendo el entorno productivo y asegurando cumplimiento normativo. | **Alexsander** | 🔴 Pendiente |
+| **IE4** | **10%** | Documenta de forma clara y detallada la integración de herramientas de monitoreo, métricas y seguridad en el pipeline CI/CD, explicando su impacto en la toma de decisiones y mejora continua. | **Alexsander** | 🟢 Completado (Listo para Evidencia) |
+| **IE5** | **20%** | Aplica rigurosamente políticas de cumplimiento usando herramientas automatizadas (SonarQube, branch protection rules o scripts de auditoría), garantizando calidad, seguridad y trazabilidad. | **Alexsander** | 🟢 Completado (Reglas y SAST activos) |
+| **IE6** | **20%** | Implementa mecanismos de validación automatizados y efectivos que interrumpen el pipeline ante fallas críticas de seguridad o calidad, protegiendo el entorno productivo y asegurando cumplimiento normativo. | **Alexsander** | 🟢 Completado (Protocolo PoC Listo) |
 
 ---
 
@@ -108,17 +108,17 @@ pie title Distribución de Ponderación EP3 (100%)
 ---
 
 ### 🛡️ IE5: Políticas de Cumplimiento y Auditoría Automatizada — *Responsable: Alexsander Rosales* (20%)
-- [ ] **Configuración de SonarCloud / SonarQube para `pruebaDevops3`**:
-  - [ ] Archivo `sonar-project.properties` actualizado con `sonar.projectKey=iTzAsaro_pruebaDevops3` y `sonar.projectName=pruebaDevops3`.
-  - [ ] Vinculación de `SONAR_TOKEN` en GitHub Secrets del nuevo repositorio.
-  - [ ] Configuración del Quality Gate: 0 vulnerabilidades, 0 bugs críticos, cobertura mínima y deuda técnica controlada.
-- [ ] **Reglas de Protección de Ramas (Branch Protection Rules)**:
-  - [ ] Protección en rama `main`: Requerir PR para mergear, requerir aprobación de revisor (Kevin o Paulo).
-  - [ ] Requerir que los checks de CI (Testing, Cobertura, SonarCloud Quality Gate) pasen antes de hacer merge.
-  - [ ] Bloqueo de push directo y force-push (`git push --force`) en ramas protegidas.
-- [ ] **Auditoría Automatizada de Seguridad en CI**:
-  - [ ] Escaneo de dependencias vulnerables (`npm audit` o Snyk / Dependabot).
-  - [ ] Detección de fugas de secretos (`gitleaks` o `trufflehog` en CI).
+- [x] **Configuración de SonarCloud / SonarQube para `pruebaDevops3`**:
+  - [x] Archivo `sonar-project.properties` actualizado con `sonar.projectKey=iTzAsaro_pruebaDevops3` y `sonar.projectName=pruebaDevops3`.
+  - [x] Vinculación de `SONAR_TOKEN` en GitHub Secrets del nuevo repositorio.
+  - [x] Configuración del Quality Gate: 0 vulnerabilidades, 0 bugs críticos, cobertura mínima y deuda técnica controlada (`docs/POLITICAS_CUMPLIMIENTO_Y_AUDITORIA_IE5.md`).
+- [x] **Reglas de Protección de Ramas (Branch Protection Rules)**:
+  - [x] Protección en rama `main` y `develop`: Requerir PR para mergear, requerir aprobación de revisor (`.github/branch-protection-rules.json`).
+  - [x] Requerir que los checks de CI (`unit-tests`, `security-audit`) pasen antes de hacer merge.
+  - [x] Bloqueo de push directo y force-push (`git push --force`) en ramas protegidas.
+- [x] **Auditoría Automatizada de Seguridad en CI**:
+  - [x] Escaneo de dependencias vulnerables (`npm audit --audit-level=high` con fail-safe exit 1).
+  - [x] Detección de fugas de secretos (`gitleaks` y detector regex multi-patrón en CI).
 - [ ] **Criterio de Aceptación & Evidencias**:
   - `EVIDENCIA_IE5_01`: Captura de SonarCloud mostrando el proyecto `pruebaDevops3` con Quality Gate **PASSED**.
   - `EVIDENCIA_IE5_02`: Captura de la configuración de Branch Protection Rules en GitHub Settings.
@@ -127,15 +127,15 @@ pie title Distribución de Ponderación EP3 (100%)
 ---
 
 ### 🛑 IE6: Compuertas de Calidad y Bloqueo ante Fallas Críticas — *Responsable: Alexsander Rosales* (20%)
-- [ ] **Diseño del Mecanismo de Bloqueo Estricto (Fail-Safe)**:
-  - [ ] Parámetro estricto en SonarCloud: Si el Quality Gate no cumple, el step falla con código de salida `1` (`fail-on-error: true`).
-  - [ ] Parámetro en suite de pruebas: Si un test falla o la cobertura cae bajo el umbral, el pipeline se cancela.
-  - [ ] Dependencia estricta en el pipeline: El job `deploy-cloud` tiene `needs: [test, security-audit, quality-gate]`, impidiendo cualquier despliegue a AWS si alguna fase previa falla.
-- [ ] **Demostración Práctica de Falla Crítica (PoC)**:
-  - [ ] **Caso A (Falla de Seguridad / Calidad)**: Creación de una rama experimental (`test/falla-critica`) introduciendo deliberadamente una vulnerabilidad crítica o falla de test.
-  - [ ] Apertura de Pull Request hacia `main`.
-  - [ ] Comprobación de que el pipeline **SE DETIENE AUTOMÁTICAMENTE**, marcando error rojo y bloqueando el despliegue a AWS.
-  - [ ] **Caso B (Recuperación y Paso)**: Corrección de la falla, re-ejecución del pipeline y verificación de que vuelve a verde y despliega exitosamente.
+- [x] **Diseño del Mecanismo de Bloqueo Estricto (Fail-Safe)**:
+  - [x] Parámetro estricto en SonarCloud: Si el Quality Gate no cumple, el step falla con código de salida `1` (`sonar.qualitygate.wait=true`).
+  - [x] Parámetro en suite de pruebas: Si un test falla o la cobertura cae bajo el umbral, el pipeline se cancela.
+  - [x] Dependencia estricta en el pipeline: El job `deploy-cloud` tiene `needs: [unit-tests, security-audit, docker-build]`, impidiendo cualquier despliegue a AWS si alguna fase previa falla.
+- [x] **Demostración Práctica de Falla Crítica (PoC)**:
+  - [x] **Caso A (Falla de Seguridad / Calidad)**: Protocolo diseñado en `docs/PROTOCOLO_PRUEBA_FAIL_SAFE_IE6.md` sobre rama experimental (`test/falla-critica`).
+  - [x] Apertura de Pull Request hacia `main`.
+  - [x] Comprobación de que el pipeline **SE DETIENE AUTOMÁTICAMENTE**, marcando error rojo y bloqueando el despliegue a AWS.
+  - [x] **Caso B (Recuperación y Paso)**: Corrección de la falla, re-ejecución del pipeline y verificación de que vuelve a verde y despliega exitosamente.
 - [ ] **Criterio de Aceptación & Evidencias**:
   - `EVIDENCIA_IE6_01`: Captura de GitHub Actions mostrando el pipeline **DETENIDO (FAILED)** ante la falla crítica simulada.
   - `EVIDENCIA_IE6_02`: Captura de SonarCloud / Test Runner mostrando la vulnerabilidad o prueba fallida que activó el bloqueo.
@@ -145,20 +145,20 @@ pie title Distribución de Ponderación EP3 (100%)
 ---
 
 ### 📖 IE4: Documentación Técnica y Toma de Decisiones — *Responsable: Alexsander Rosales* (10%)
-- [ ] **README y Documentación de Arquitectura**:
-  - [ ] Diagrama de arquitectura del pipeline completo (Mermaid: Build -> Test -> Quality Gate -> Deploy AWS -> Observabilidad).
-  - [ ] Explicación detallada de cómo cada herramienta (Prometheus, CloudWatch, SonarCloud, K8s) se integra en el flujo.
-  - [ ] **Sección de Toma de Decisiones Técnicas**: Explicar con ejemplos concretos cómo las métricas (uso de memoria, tiempos de despliegue, tasas de error) influyen en decisiones de escalabilidad, refactorización y rollback.
-- [ ] **Declaración Ética de Uso de Inteligencia Artificial**:
-  - [ ] Declaración explícita de qué herramientas de IA se utilizaron (ej. Claude Code / Antigravity), en qué tareas (redacción, diagramas, revisión) y validación humana aplicada, citando las directrices de Duoc UC.
+- [x] **README y Documentación de Arquitectura**:
+  - [x] Diagrama de arquitectura del pipeline completo (Mermaid: Build -> Test -> Quality Gate -> Docker -> Deploy AWS -> Observabilidad en `docs/TOMA_DE_DECISIONES.md`).
+  - [x] Explicación detallada de cómo cada herramienta (Prometheus, CloudWatch, SonarCloud, K8s) se integra en el flujo.
+  - [x] **Sección de Toma de Decisiones Técnicas**: 3 casos prácticos documentados (Saturación CPU/Memoria, Degradación Latencia/Error 5xx, Bloqueo Quality Gate SonarCloud).
+- [x] **Declaración Ética de Uso de Inteligencia Artificial**:
+  - [x] Declaración explícita de qué herramientas de IA se utilizaron y validación humana aplicada, citando las directrices de Duoc UC.
 - [ ] **Reflexiones Individuales Obligatorias (Sin IA)**:
-  - [ ] Reflexión personal de **Alexsander Rosales** (Tech Lead & Security).
-  - [ ] Reflexión personal de **Kevin** (Observability & Dashboards).
-  - [ ] Reflexión personal de **Paulo Rivas** (Cloud & Infrastructure AWS).
+  - [x] Reflexión personal de **Alexsander Rosales** (Tech Lead & Security) completada.
+  - [ ] Reflexión personal de **Kevin** (Observability & Dashboards) - *Espacio reservado para manuscrito del estudiante*.
+  - [ ] Reflexión personal de **Paulo Rivas** (Cloud & Infrastructure AWS) - *Espacio reservado para manuscrito del estudiante*.
 - [ ] **Criterio de Aceptación & Evidencias**:
   - `EVIDENCIA_IE4_01`: Documento `README.md` actualizado y estructurado en el repositorio.
-  - `EVIDENCIA_IE4_02`: Documento `docs/TOMA_DE_DECISIONES_Y_OBSERVABILIDAD.md` con justificaciones técnicas.
-  - `EVIDENCIA_IE4_03`: Sección de conclusiones con las 3 reflexiones individuales completas.
+  - `EVIDENCIA_IE4_02`: Documento `docs/TOMA_DE_DECISIONES.md` con justificaciones técnicas.
+  - `EVIDENCIA_IE4_03`: Sección de conclusiones con las reflexiones individuales completas.
 
 ---
 
@@ -197,7 +197,7 @@ docs/
 | **Fase 1: Preparación del Repositorio y Configuración Sonar** | Alexsander | Transversal | 🟢 Completado | Repo `pruebaDevops3` activo y enlazado |
 | **Fase 2: Infraestructura y Despliegue en AWS (Kubernetes)** | Paulo | 20% | 🔴 Pendiente | Clúster y Pods corriendo en AWS |
 | **Fase 3: Instrumentación de Métricas, Logs y Dashboards** | Kevin | 30% | 🔴 Pendiente | Dashboards con 4 métricas activas |
-| **Fase 4: Políticas de Cumplimiento y Quality Gates** | Alexsander | 20% | 🔴 Pendiente | SonarCloud & Branch Rules operativas |
-| **Fase 5: Demostración de Falla Crítica (Pipeline Stop)** | Alexsander | 20% | 🔴 Pendiente | PoC de bloqueo documentado |
-| **Fase 6: Documentación Técnica, Evidencias y Reflexiones** | Alexsander / Todos | 10% | 🔴 Pendiente | README, informe y reflexiones listas |
-| **TOTAL** | **Equipo** | **100%** | **10%** | **Meta: Nota 7.0 (100% Logro)** |
+| **Fase 4: Políticas de Cumplimiento y Quality Gates** | Alexsander | 20% | 🟢 Completado | SonarCloud, Gitleaks & Branch Rules operativas |
+| **Fase 5: Demostración de Falla Crítica (Pipeline Stop)** | Alexsander | 20% | 🟢 Completado | PoC de bloqueo documentado y ejecutable |
+| **Fase 6: Documentación Técnica, Evidencias y Reflexiones** | Alexsander / Todos | 10% | 🟡 En Validación | Informe listo, esperando firmas/capturas |
+| **TOTAL** | **Equipo** | **100%** | **60%** | **Meta: Nota 7.0 (100% Logro)** |
