@@ -1,0 +1,158 @@
+﻿{
+    "status":  "success",
+    "data":  {
+                 "activeTargets":  [
+                                       {
+                                           "discoveredLabels":  {
+                                                                    "__address__":  "frontend:5000",
+                                                                    "__metrics_path__":  "/metrics",
+                                                                    "__scheme__":  "http",
+                                                                    "__scrape_interval__":  "15s",
+                                                                    "__scrape_timeout__":  "5s",
+                                                                    "environment":  "local",
+                                                                    "job":  "vicity-apps",
+                                                                    "service":  "frontend"
+                                                                },
+                                           "labels":  {
+                                                          "environment":  "local",
+                                                          "instance":  "frontend:5000",
+                                                          "job":  "vicity-apps",
+                                                          "service":  "frontend"
+                                                      },
+                                           "scrapePool":  "vicity-apps",
+                                           "scrapeUrl":  "http://frontend:5000/metrics",
+                                           "globalUrl":  "http://frontend:5000/metrics",
+                                           "lastError":  "",
+                                           "lastScrape":  "2026-11-20T21:39:26.65771148Z",
+                                           "lastScrapeDuration":  0.010192444,
+                                           "health":  "up",
+                                           "scrapeInterval":  "15s",
+                                           "scrapeTimeout":  "5s"
+                                       },
+                                       {
+                                           "discoveredLabels":  {
+                                                                    "__address__":  "backend:3000",
+                                                                    "__metrics_path__":  "/metrics",
+                                                                    "__scheme__":  "http",
+                                                                    "__scrape_interval__":  "15s",
+                                                                    "__scrape_timeout__":  "5s",
+                                                                    "environment":  "local",
+                                                                    "job":  "vicity-apps",
+                                                                    "service":  "backend"
+                                                                },
+                                           "labels":  {
+                                                          "environment":  "local",
+                                                          "instance":  "backend:3000",
+                                                          "job":  "vicity-apps",
+                                                          "service":  "backend"
+                                                      },
+                                           "scrapePool":  "vicity-apps",
+                                           "scrapeUrl":  "http://backend:3000/metrics",
+                                           "globalUrl":  "http://backend:3000/metrics",
+                                           "lastError":  "",
+                                           "lastScrape":  "2026-11-20T21:39:24.622572549Z",
+                                           "lastScrapeDuration":  0.006104364,
+                                           "health":  "up",
+                                           "scrapeInterval":  "15s",
+                                           "scrapeTimeout":  "5s"
+                                       },
+                                       {
+                                           "discoveredLabels":  {
+                                                                    "__address__":  "http://frontend:5000/healthz",
+                                                                    "__metrics_path__":  "/probe",
+                                                                    "__param_module":  "http_get_200",
+                                                                    "__scheme__":  "http",
+                                                                    "__scrape_interval__":  "15s",
+                                                                    "__scrape_timeout__":  "5s",
+                                                                    "check":  "frontend_health",
+                                                                    "environment":  "local",
+                                                                    "job":  "vicity-http-probes",
+                                                                    "service":  "frontend"
+                                                                },
+                                           "labels":  {
+                                                          "check":  "frontend_health",
+                                                          "environment":  "local",
+                                                          "instance":  "http://frontend:5000/healthz",
+                                                          "job":  "vicity-http-probes",
+                                                          "service":  "frontend"
+                                                      },
+                                           "scrapePool":  "vicity-http-probes",
+                                           "scrapeUrl":  "http://blackbox:9115/probe?module=http_get_200\u0026target=http%3A%2F%2Ffrontend%3A5000%2Fhealthz",
+                                           "globalUrl":  "http://blackbox:9115/probe?module=http_get_200\u0026target=http%3A%2F%2Ffrontend%3A5000%2Fhealthz",
+                                           "lastError":  "",
+                                           "lastScrape":  "2026-11-20T21:39:32.828675951Z",
+                                           "lastScrapeDuration":  0.003148129,
+                                           "health":  "up",
+                                           "scrapeInterval":  "15s",
+                                           "scrapeTimeout":  "5s"
+                                       },
+                                       {
+                                           "discoveredLabels":  {
+                                                                    "__address__":  "http://frontend:5000/api/health",
+                                                                    "__metrics_path__":  "/probe",
+                                                                    "__param_module":  "http_get_200",
+                                                                    "__scheme__":  "http",
+                                                                    "__scrape_interval__":  "15s",
+                                                                    "__scrape_timeout__":  "5s",
+                                                                    "check":  "proxy_health",
+                                                                    "environment":  "local",
+                                                                    "job":  "vicity-http-probes",
+                                                                    "service":  "frontend"
+                                                                },
+                                           "labels":  {
+                                                          "check":  "proxy_health",
+                                                          "environment":  "local",
+                                                          "instance":  "http://frontend:5000/api/health",
+                                                          "job":  "vicity-http-probes",
+                                                          "service":  "frontend"
+                                                      },
+                                           "scrapePool":  "vicity-http-probes",
+                                           "scrapeUrl":  "http://blackbox:9115/probe?module=http_get_200\u0026target=http%3A%2F%2Ffrontend%3A5000%2Fapi%2Fhealth",
+                                           "globalUrl":  "http://blackbox:9115/probe?module=http_get_200\u0026target=http%3A%2F%2Ffrontend%3A5000%2Fapi%2Fhealth",
+                                           "lastError":  "",
+                                           "lastScrape":  "2026-11-20T21:39:21.586114826Z",
+                                           "lastScrapeDuration":  0.005255035,
+                                           "health":  "up",
+                                           "scrapeInterval":  "15s",
+                                           "scrapeTimeout":  "5s"
+                                       },
+                                       {
+                                           "discoveredLabels":  {
+                                                                    "__address__":  "http://backend:3000/api/health",
+                                                                    "__metrics_path__":  "/probe",
+                                                                    "__param_module":  "http_get_200",
+                                                                    "__scheme__":  "http",
+                                                                    "__scrape_interval__":  "15s",
+                                                                    "__scrape_timeout__":  "5s",
+                                                                    "check":  "backend_health",
+                                                                    "environment":  "local",
+                                                                    "job":  "vicity-http-probes",
+                                                                    "service":  "backend"
+                                                                },
+                                           "labels":  {
+                                                          "check":  "backend_health",
+                                                          "environment":  "local",
+                                                          "instance":  "http://backend:3000/api/health",
+                                                          "job":  "vicity-http-probes",
+                                                          "service":  "backend"
+                                                      },
+                                           "scrapePool":  "vicity-http-probes",
+                                           "scrapeUrl":  "http://blackbox:9115/probe?module=http_get_200\u0026target=http%3A%2F%2Fbackend%3A3000%2Fapi%2Fhealth",
+                                           "globalUrl":  "http://blackbox:9115/probe?module=http_get_200\u0026target=http%3A%2F%2Fbackend%3A3000%2Fapi%2Fhealth",
+                                           "lastError":  "",
+                                           "lastScrape":  "2026-11-20T21:39:30.448623536Z",
+                                           "lastScrapeDuration":  0.003465992,
+                                           "health":  "up",
+                                           "scrapeInterval":  "15s",
+                                           "scrapeTimeout":  "5s"
+                                       }
+                                   ],
+                 "droppedTargets":  [
+
+                                    ],
+                 "droppedTargetCounts":  {
+                                             "vicity-apps":  0,
+                                             "vicity-http-probes":  0
+                                         }
+             }
+}

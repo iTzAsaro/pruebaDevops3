@@ -274,7 +274,7 @@ En cumplimiento con la política institucional de Duoc UC sobre el uso ético de
 > *[Espacio reservado para redacción individual al cierre del encargo EP3]*
 
 ### 2. Reflexión de Kevin (Observability & Dashboards Engineer)
-> *[Espacio reservado para redacción individual al cierre del encargo EP3]*
+Durante el desarrollo en esta ocacion, participé en el área de observabilidad, trabajando con herramientas como Prometheus y Grafana para monitorear el funcionamiento de los microservicios. Esta experiencia me permitió conocer mejor la importancia de las métricas, los registros y la detección de errores dentro de un entorno DevOps. También pude comprender la importancia del trabajo en equipo para integrar las distintas partes del proyecto.
 
 ### 3. Reflexión de Paulo Rivas (Cloud & Infrastructure Engineer - AWS Specialist)
 Durante el desarrollo de esta Evaluación Parcial 3, consolidé la transición desde la orquestación básica con contenedores hacia un entorno cloud-native orquestado con Kubernetes sobre infraestructura elástica en AWS. Aprovisionar el clúster de control-plane, definir manifiestos declarativos desacoplados para backend y frontend con sondas de salud (liveness y readiness probes) y configurar límites estrictos de CPU y memoria me permitió comprender la importancia de la alta disponibilidad y la resiliencia en arquitecturas productivas. Asimismo, vincular el monitoreo nativo a través del agente de CloudWatch y la exposición balanceada de servicios demostró que el aprovisionamiento de infraestructura moderno debe concebirse de manera inseparable con la observabilidad continua. Esta experiencia reforzó mi capacidad para estructurar despliegues automatizados, auditables y gobernados bajo estándares DevOps reales.

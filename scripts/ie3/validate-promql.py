@@ -12,7 +12,7 @@ DASHBOARD = ROOT / 'observability' / 'grafana' / 'dashboards' / 'ep3-kevin-galla
 promtool_path = shutil.which('promtool') or 'promtool'
 if len(sys.argv) > 1 and sys.argv[1]:
     arg_candidate = Path(sys.argv[1]).resolve()
-    if arg_candidate.is_file() and arg_candidate.name == 'promtool':
+    if arg_candidate.is_file() and arg_candidate.name.lower() in ('promtool', 'promtool.exe'):
         promtool_path = str(arg_candidate)
 
 dashboard = json.loads(DASHBOARD.read_text(encoding='utf-8'))

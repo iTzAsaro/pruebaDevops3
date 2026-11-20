@@ -82,7 +82,9 @@ pie title Distribución de Ponderación EP3 (100%)
   - [x] Prometheus configurado con `scrape_configs` (`observability/prometheus/prometheus.yml`) apuntando a los pods/servicios del microservicio.
   - [x] Recolección de logs configurada (`observability/logging/pipeline.conf` y FluentBit).
   - [x] Captura de errores de aplicación y códigos HTTP 4xx/5xx en tiempo real.
-  - [x] Verificación de disponibilidad continua (*uptime check* con Blackbox Exporter).
+  - [x] Verificación de disponibilidad continua (*uptime check* con Blackbox Exporter, validada en Docker local).
+
+  > La [validación local de Kevin](KEVIN_VALIDACION_EP3.md) distingue las evidencias obtenidas en Docker de las comprobaciones aún pendientes para AWS y CI/CD.
 - [x] **Criterio de Aceptación & Evidencias**:
   - [x] `EVIDENCIA_IE1_01`: Salida del endpoint `/metrics` en el microservicio (`docs/KEVIN_METRICAS.md`).
   - [x] `EVIDENCIA_IE1_02`: Panel de targets en Prometheus / CloudWatch con estado `UP` (`docs/KEVIN_STACK_MONITOREO.md`).

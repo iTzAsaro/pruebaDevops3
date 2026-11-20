@@ -1,0 +1,262 @@
+﻿{
+    "latency":  {
+                    "status":  "success",
+                    "data":  {
+                                 "resultType":  "vector",
+                                 "result":  [
+                                                {
+                                                    "metric":  {
+                                                                   "service":  "backend"
+                                                               },
+                                                    "value":  [
+                                                                  1795210792.060,
+                                                                  "0.00475"
+                                                              ]
+                                                },
+                                                {
+                                                    "metric":  {
+                                                                   "service":  "frontend"
+                                                               },
+                                                    "value":  [
+                                                                  1795210792.060,
+                                                                  "0.00475"
+                                                              ]
+                                                }
+                                            ]
+                             }
+                },
+    "process_rss":  {
+                        "status":  "success",
+                        "data":  {
+                                     "resultType":  "vector",
+                                     "result":  [
+                                                    {
+                                                        "metric":  {
+                                                                       "__name__":  "process_resident_memory_bytes",
+                                                                       "environment":  "local",
+                                                                       "instance":  "backend:3000",
+                                                                       "job":  "vicity-apps",
+                                                                       "service":  "backend"
+                                                                   },
+                                                        "value":  [
+                                                                      1795210792.073,
+                                                                      "56553472"
+                                                                  ]
+                                                    },
+                                                    {
+                                                        "metric":  {
+                                                                       "__name__":  "process_resident_memory_bytes",
+                                                                       "environment":  "local",
+                                                                       "instance":  "frontend:5000",
+                                                                       "job":  "vicity-apps",
+                                                                       "service":  "frontend"
+                                                                   },
+                                                        "value":  [
+                                                                      1795210792.073,
+                                                                      "56676352"
+                                                                  ]
+                                                    }
+                                                ]
+                                 }
+                    },
+    "process_cpu":  {
+                        "status":  "success",
+                        "data":  {
+                                     "resultType":  "vector",
+                                     "result":  [
+                                                    {
+                                                        "metric":  {
+                                                                       "__name__":  "process_cpu_seconds_total",
+                                                                       "environment":  "local",
+                                                                       "instance":  "backend:3000",
+                                                                       "job":  "vicity-apps",
+                                                                       "service":  "backend"
+                                                                   },
+                                                        "value":  [
+                                                                      1795210792.068,
+                                                                      "0.668806"
+                                                                  ]
+                                                    },
+                                                    {
+                                                        "metric":  {
+                                                                       "__name__":  "process_cpu_seconds_total",
+                                                                       "environment":  "local",
+                                                                       "instance":  "frontend:5000",
+                                                                       "job":  "vicity-apps",
+                                                                       "service":  "frontend"
+                                                                   },
+                                                        "value":  [
+                                                                      1795210792.068,
+                                                                      "0.6768149999999999"
+                                                                  ]
+                                                    }
+                                                ]
+                                 }
+                    },
+    "errors":  {
+                   "status":  "success",
+                   "data":  {
+                                "resultType":  "vector",
+                                "result":  [
+                                               {
+                                                   "metric":  {
+                                                                  "__name__":  "vicity_http_errors_total",
+                                                                  "environment":  "local",
+                                                                  "instance":  "backend:3000",
+                                                                  "job":  "vicity-apps",
+                                                                  "service":  "backend",
+                                                                  "status_class":  "4xx"
+                                                              },
+                                                   "value":  [
+                                                                 1795210792.064,
+                                                                 "2"
+                                                             ]
+                                               },
+                                               {
+                                                   "metric":  {
+                                                                  "__name__":  "vicity_http_errors_total",
+                                                                  "environment":  "local",
+                                                                  "instance":  "backend:3000",
+                                                                  "job":  "vicity-apps",
+                                                                  "service":  "backend",
+                                                                  "status_class":  "5xx"
+                                                              },
+                                                   "value":  [
+                                                                 1795210792.064,
+                                                                 "0"
+                                                             ]
+                                               },
+                                               {
+                                                   "metric":  {
+                                                                  "__name__":  "vicity_http_errors_total",
+                                                                  "environment":  "local",
+                                                                  "instance":  "frontend:5000",
+                                                                  "job":  "vicity-apps",
+                                                                  "service":  "frontend",
+                                                                  "status_class":  "4xx"
+                                                              },
+                                                   "value":  [
+                                                                 1795210792.064,
+                                                                 "2"
+                                                             ]
+                                               },
+                                               {
+                                                   "metric":  {
+                                                                  "__name__":  "vicity_http_errors_total",
+                                                                  "environment":  "local",
+                                                                  "instance":  "frontend:5000",
+                                                                  "job":  "vicity-apps",
+                                                                  "service":  "frontend",
+                                                                  "status_class":  "5xx"
+                                                              },
+                                                   "value":  [
+                                                                 1795210792.064,
+                                                                 "0"
+                                                             ]
+                                               }
+                                           ]
+                            }
+               },
+    "after":  {
+                  "status":  "success",
+                  "data":  {
+                               "resultType":  "vector",
+                               "result":  [
+                                              {
+                                                  "metric":  {
+                                                                 "service":  "backend"
+                                                             },
+                                                  "value":  [
+                                                                1795210792.054,
+                                                                "42"
+                                                            ]
+                                              },
+                                              {
+                                                  "metric":  {
+                                                                 "service":  "frontend"
+                                                             },
+                                                  "value":  [
+                                                                1795210792.054,
+                                                                "42"
+                                                            ]
+                                              }
+                                          ]
+                           }
+              },
+    "before":  {
+                   "status":  "success",
+                   "data":  {
+                                "resultType":  "vector",
+                                "result":  [
+                                               {
+                                                   "metric":  {
+                                                                  "service":  "backend"
+                                                              },
+                                                   "value":  [
+                                                                 1795210774.261,
+                                                                 "21"
+                                                             ]
+                                               },
+                                               {
+                                                   "metric":  {
+                                                                  "service":  "frontend"
+                                                              },
+                                                   "value":  [
+                                                                 1795210774.261,
+                                                                 "21"
+                                                             ]
+                                               }
+                                           ]
+                            }
+               },
+    "availability":  {
+                         "status":  "success",
+                         "data":  {
+                                      "resultType":  "vector",
+                                      "result":  [
+                                                     {
+                                                         "metric":  {
+                                                                        "__name__":  "probe_success",
+                                                                        "check":  "frontend_health",
+                                                                        "environment":  "local",
+                                                                        "instance":  "http://frontend:5000/healthz",
+                                                                        "job":  "vicity-http-probes",
+                                                                        "service":  "frontend"
+                                                                    },
+                                                         "value":  [
+                                                                       1795210792.057,
+                                                                       "1"
+                                                                   ]
+                                                     },
+                                                     {
+                                                         "metric":  {
+                                                                        "__name__":  "probe_success",
+                                                                        "check":  "proxy_health",
+                                                                        "environment":  "local",
+                                                                        "instance":  "http://frontend:5000/api/health",
+                                                                        "job":  "vicity-http-probes",
+                                                                        "service":  "frontend"
+                                                                    },
+                                                         "value":  [
+                                                                       1795210792.057,
+                                                                       "1"
+                                                                   ]
+                                                     },
+                                                     {
+                                                         "metric":  {
+                                                                        "__name__":  "probe_success",
+                                                                        "check":  "backend_health",
+                                                                        "environment":  "local",
+                                                                        "instance":  "http://backend:3000/api/health",
+                                                                        "job":  "vicity-http-probes",
+                                                                        "service":  "backend"
+                                                                    },
+                                                         "value":  [
+                                                                       1795210792.057,
+                                                                       "1"
+                                                                   ]
+                                                     }
+                                                 ]
+                                  }
+                     }
+}

@@ -1,0 +1,221 @@
+﻿# HELP process_cpu_user_seconds_total Total user CPU time spent in seconds.
+# TYPE process_cpu_user_seconds_total counter
+process_cpu_user_seconds_total{service="frontend"} 0.40973800000000005
+
+# HELP process_cpu_system_seconds_total Total system CPU time spent in seconds.
+# TYPE process_cpu_system_seconds_total counter
+process_cpu_system_seconds_total{service="frontend"} 0.166169
+
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total{service="frontend"} 0.575907
+
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds{service="frontend"} 1795210728
+
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes{service="frontend"} 56610816
+
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes{service="frontend"} 716972032
+
+# HELP process_heap_bytes Process heap size in bytes.
+# TYPE process_heap_bytes gauge
+process_heap_bytes{service="frontend"} 86200320
+
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds{service="frontend"} 20
+
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds{service="frontend"} 1048576
+
+# HELP nodejs_eventloop_lag_seconds Lag of event loop in seconds.
+# TYPE nodejs_eventloop_lag_seconds gauge
+nodejs_eventloop_lag_seconds{service="frontend"} 0.006779277
+
+# HELP nodejs_eventloop_lag_min_seconds The minimum recorded event loop delay.
+# TYPE nodejs_eventloop_lag_min_seconds gauge
+nodejs_eventloop_lag_min_seconds{service="frontend"} 0.009158656
+
+# HELP nodejs_eventloop_lag_max_seconds The maximum recorded event loop delay.
+# TYPE nodejs_eventloop_lag_max_seconds gauge
+nodejs_eventloop_lag_max_seconds{service="frontend"} 0.012779519
+
+# HELP nodejs_eventloop_lag_mean_seconds The mean of the recorded event loop delays.
+# TYPE nodejs_eventloop_lag_mean_seconds gauge
+nodejs_eventloop_lag_mean_seconds{service="frontend"} 0.010176650753387534
+
+# HELP nodejs_eventloop_lag_stddev_seconds The standard deviation of the recorded event loop delays.
+# TYPE nodejs_eventloop_lag_stddev_seconds gauge
+nodejs_eventloop_lag_stddev_seconds{service="frontend"} 0.00017129460731950686
+
+# HELP nodejs_eventloop_lag_p50_seconds The 50th percentile of the recorded event loop delays.
+# TYPE nodejs_eventloop_lag_p50_seconds gauge
+nodejs_eventloop_lag_p50_seconds{service="frontend"} 0.010149887
+
+# HELP nodejs_eventloop_lag_p90_seconds The 90th percentile of the recorded event loop delays.
+# TYPE nodejs_eventloop_lag_p90_seconds gauge
+nodejs_eventloop_lag_p90_seconds{service="frontend"} 0.010239999
+
+# HELP nodejs_eventloop_lag_p99_seconds The 99th percentile of the recorded event loop delays.
+# TYPE nodejs_eventloop_lag_p99_seconds gauge
+nodejs_eventloop_lag_p99_seconds{service="frontend"} 0.010575871
+
+# HELP nodejs_active_resources Number of active resources that are currently keeping the event loop alive, grouped by async resource type.
+# TYPE nodejs_active_resources gauge
+nodejs_active_resources{type="TCPServerWrap",service="frontend"} 1
+nodejs_active_resources{type="PipeWrap",service="frontend"} 2
+nodejs_active_resources{type="TCPSocketWrap",service="frontend"} 1
+nodejs_active_resources{type="Immediate",service="frontend"} 1
+
+# HELP nodejs_active_resources_total Total number of active resources.
+# TYPE nodejs_active_resources_total gauge
+nodejs_active_resources_total{service="frontend"} 5
+
+# HELP nodejs_active_handles Number of active libuv handles grouped by handle type. Every handle type is C++ class name.
+# TYPE nodejs_active_handles gauge
+nodejs_active_handles{type="Server",service="frontend"} 1
+nodejs_active_handles{type="Socket",service="frontend"} 3
+
+# HELP nodejs_active_handles_total Total number of active handles.
+# TYPE nodejs_active_handles_total gauge
+nodejs_active_handles_total{service="frontend"} 4
+
+# HELP nodejs_active_requests Number of active libuv requests grouped by request type. Every request type is C++ class name.
+# TYPE nodejs_active_requests gauge
+
+# HELP nodejs_active_requests_total Total number of active requests.
+# TYPE nodejs_active_requests_total gauge
+nodejs_active_requests_total{service="frontend"} 0
+
+# HELP nodejs_heap_size_total_bytes Process heap size from Node.js in bytes.
+# TYPE nodejs_heap_size_total_bytes gauge
+nodejs_heap_size_total_bytes{service="frontend"} 7733248
+
+# HELP nodejs_heap_size_used_bytes Process heap size used from Node.js in bytes.
+# TYPE nodejs_heap_size_used_bytes gauge
+nodejs_heap_size_used_bytes{service="frontend"} 6446816
+
+# HELP nodejs_external_memory_bytes Node.js external memory size in bytes.
+# TYPE nodejs_external_memory_bytes gauge
+nodejs_external_memory_bytes{service="frontend"} 2069423
+
+# HELP nodejs_heap_space_size_total_bytes Process heap space size total from Node.js in bytes.
+# TYPE nodejs_heap_space_size_total_bytes gauge
+nodejs_heap_space_size_total_bytes{space="read_only",service="frontend"} 0
+nodejs_heap_space_size_total_bytes{space="new",service="frontend"} 1048576
+nodejs_heap_space_size_total_bytes{space="old",service="frontend"} 5472256
+nodejs_heap_space_size_total_bytes{space="code",service="frontend"} 786432
+nodejs_heap_space_size_total_bytes{space="shared",service="frontend"} 0
+nodejs_heap_space_size_total_bytes{space="new_large_object",service="frontend"} 0
+nodejs_heap_space_size_total_bytes{space="large_object",service="frontend"} 270336
+nodejs_heap_space_size_total_bytes{space="code_large_object",service="frontend"} 155648
+nodejs_heap_space_size_total_bytes{space="shared_large_object",service="frontend"} 0
+
+# HELP nodejs_heap_space_size_used_bytes Process heap space size used from Node.js in bytes.
+# TYPE nodejs_heap_space_size_used_bytes gauge
+nodejs_heap_space_size_used_bytes{space="read_only",service="frontend"} 0
+nodejs_heap_space_size_used_bytes{space="new",service="frontend"} 406520
+nodejs_heap_space_size_used_bytes{space="old",service="frontend"} 4911632
+nodejs_heap_space_size_used_bytes{space="code",service="frontend"} 731856
+nodejs_heap_space_size_used_bytes{space="shared",service="frontend"} 0
+nodejs_heap_space_size_used_bytes{space="new_large_object",service="frontend"} 0
+nodejs_heap_space_size_used_bytes{space="large_object",service="frontend"} 262160
+nodejs_heap_space_size_used_bytes{space="code_large_object",service="frontend"} 138432
+nodejs_heap_space_size_used_bytes{space="shared_large_object",service="frontend"} 0
+
+# HELP nodejs_heap_space_size_available_bytes Process heap space size available from Node.js in bytes.
+# TYPE nodejs_heap_space_size_available_bytes gauge
+nodejs_heap_space_size_available_bytes{space="read_only",service="frontend"} 0
+nodejs_heap_space_size_available_bytes{space="new",service="frontend"} 624360
+nodejs_heap_space_size_available_bytes{space="old",service="frontend"} 461320
+nodejs_heap_space_size_available_bytes{space="code",service="frontend"} 5264
+nodejs_heap_space_size_available_bytes{space="shared",service="frontend"} 0
+nodejs_heap_space_size_available_bytes{space="new_large_object",service="frontend"} 1048576
+nodejs_heap_space_size_available_bytes{space="large_object",service="frontend"} 0
+nodejs_heap_space_size_available_bytes{space="code_large_object",service="frontend"} 0
+nodejs_heap_space_size_available_bytes{space="shared_large_object",service="frontend"} 0
+
+# HELP nodejs_version_info Node.js version info.
+# TYPE nodejs_version_info gauge
+nodejs_version_info{version="v20.20.2",major="20",minor="20",patch="2",service="frontend"} 1
+
+# HELP nodejs_gc_duration_seconds Garbage collection duration by kind, one of major, minor, incremental or weakcb.
+# TYPE nodejs_gc_duration_seconds histogram
+nodejs_gc_duration_seconds_bucket{le="0.001",service="frontend",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="0.01",service="frontend",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="0.1",service="frontend",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="1",service="frontend",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="2",service="frontend",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="5",service="frontend",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="+Inf",service="frontend",kind="incremental"} 2
+nodejs_gc_duration_seconds_sum{service="frontend",kind="incremental"} 0.0013044270002283156
+nodejs_gc_duration_seconds_count{service="frontend",kind="incremental"} 2
+nodejs_gc_duration_seconds_bucket{le="0.001",service="frontend",kind="major"} 0
+nodejs_gc_duration_seconds_bucket{le="0.01",service="frontend",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="0.1",service="frontend",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="1",service="frontend",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="2",service="frontend",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="5",service="frontend",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="+Inf",service="frontend",kind="major"} 2
+nodejs_gc_duration_seconds_sum{service="frontend",kind="major"} 0.005679524000734091
+nodejs_gc_duration_seconds_count{service="frontend",kind="major"} 2
+nodejs_gc_duration_seconds_bucket{le="0.001",service="frontend",kind="minor"} 3
+nodejs_gc_duration_seconds_bucket{le="0.01",service="frontend",kind="minor"} 3
+nodejs_gc_duration_seconds_bucket{le="0.1",service="frontend",kind="minor"} 3
+nodejs_gc_duration_seconds_bucket{le="1",service="frontend",kind="minor"} 3
+nodejs_gc_duration_seconds_bucket{le="2",service="frontend",kind="minor"} 3
+nodejs_gc_duration_seconds_bucket{le="5",service="frontend",kind="minor"} 3
+nodejs_gc_duration_seconds_bucket{le="+Inf",service="frontend",kind="minor"} 3
+nodejs_gc_duration_seconds_sum{service="frontend",kind="minor"} 0.0019554920000955465
+nodejs_gc_duration_seconds_count{service="frontend",kind="minor"} 3
+
+# HELP vicity_http_requests_total Total HTTP requests served by frontend gateway
+# TYPE vicity_http_requests_total counter
+vicity_http_requests_total{method="GET",route="api_proxy",status_code="200",service="frontend"} 20
+vicity_http_requests_total{method="GET",route="api_proxy",status_code="404",service="frontend"} 1
+
+# HELP vicity_http_request_duration_seconds Latency distribution of frontend HTTP responses in seconds
+# TYPE vicity_http_request_duration_seconds histogram
+vicity_http_request_duration_seconds_bucket{le="0.005",service="frontend",method="GET",route="api_proxy",status_code="200"} 14
+vicity_http_request_duration_seconds_bucket{le="0.01",service="frontend",method="GET",route="api_proxy",status_code="200"} 18
+vicity_http_request_duration_seconds_bucket{le="0.025",service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_bucket{le="0.05",service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_bucket{le="0.1",service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_bucket{le="0.25",service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_bucket{le="0.5",service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_bucket{le="1",service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_bucket{le="2.5",service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_bucket{le="5",service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_bucket{le="10",service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_bucket{le="+Inf",service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_sum{service="frontend",method="GET",route="api_proxy",status_code="200"} 0.09464408399999998
+vicity_http_request_duration_seconds_count{service="frontend",method="GET",route="api_proxy",status_code="200"} 20
+vicity_http_request_duration_seconds_bucket{le="0.005",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="0.01",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="0.025",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="0.05",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="0.1",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="0.25",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="0.5",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="1",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="2.5",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="5",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="10",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_bucket{le="+Inf",service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+vicity_http_request_duration_seconds_sum{service="frontend",method="GET",route="api_proxy",status_code="404"} 0.004184348
+vicity_http_request_duration_seconds_count{service="frontend",method="GET",route="api_proxy",status_code="404"} 1
+
+# HELP vicity_http_errors_total Total HTTP error responses by classification category
+# TYPE vicity_http_errors_total counter
+vicity_http_errors_total{status_class="4xx",service="frontend"} 1
+vicity_http_errors_total{status_class="5xx",service="frontend"} 0
+
+# HELP vicity_process_uptime_seconds Frontend Node.js runtime process uptime in seconds
+# TYPE vicity_process_uptime_seconds gauge
+vicity_process_uptime_seconds{service="frontend"} 46.428384879

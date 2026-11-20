@@ -1,0 +1,948 @@
+﻿{
+    "description":  "IE3 Â· Las fuentes no conectadas no generan muestras. Consultar docs/KEVIN_DASHBOARD_IE3.md.",
+    "editable":  true,
+    "id":  2,
+    "panels":  [
+                   {
+                       "collapsed":  false,
+                       "gridPos":  {
+                                       "h":  1,
+                                       "w":  24,
+                                       "x":  0,
+                                       "y":  0
+                                   },
+                       "id":  1,
+                       "panels":  [
+
+                                  ],
+                       "title":  "01 Â· Despliegues | GitHub Actions",
+                       "type":  "row"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-ci-history"
+                                      },
+                       "description":  "Inicio â fin del job GitHub Actions; no certifica disponibilidad ni rollout. Resultado segÃºn GitHub.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "s"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  0,
+                                       "y":  1
+                                   },
+                       "id":  2,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-ci-history"
+                                                          },
+                                           "expr":  "last_over_time(vicity_ci_deployment_duration_seconds{branch=~\"${branch:regex}\",environment=~\"${deploy_environment:regex}\"}[$__interval])",
+                                           "instant":  false,
+                                           "legendFormat":  "{{environment}} Â· {{branch}} Â· {{result}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "DuraciÃ³n histÃ³rica del job de despliegue",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-ci-history"
+                                      },
+                       "description":  "Ãltima muestra en el rango, aun si fallÃ³. timestamp(last_over_time) usa el timestamp de la muestra disponible; muestra empates si los timestamps coinciden.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "s"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  12,
+                                       "y":  1
+                                   },
+                       "id":  3,
+                       "options":  {
+                                       "graphMode":  "none",
+                                       "reduceOptions":  {
+                                                             "calcs":  [
+                                                                           "lastNotNull"
+                                                                       ],
+                                                             "fields":  "",
+                                                             "values":  false
+                                                         },
+                                       "textMode":  "value_and_name"
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-ci-history"
+                                                          },
+                                           "expr":  "last_over_time(vicity_ci_deployment_duration_seconds{branch=~\"${branch:regex}\",environment=~\"${deploy_environment:regex}\"}[$__range]) and (timestamp(last_over_time(vicity_ci_deployment_duration_seconds{branch=~\"${branch:regex}\",environment=~\"${deploy_environment:regex}\"}[$__range])) == on(environment,branch) group_left max by (environment,branch) (timestamp(last_over_time(vicity_ci_deployment_duration_seconds{branch=~\"${branch:regex}\",environment=~\"${deploy_environment:regex}\"}[$__range]))))",
+                                           "instant":  true,
+                                           "legendFormat":  "{{environment}} Â· {{branch}} Â· {{result}}",
+                                           "range":  false,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "Ãltimo despliegue por entorno y rama",
+                       "type":  "stat"
+                   },
+                   {
+                       "collapsed":  false,
+                       "gridPos":  {
+                                       "h":  1,
+                                       "w":  24,
+                                       "x":  0,
+                                       "y":  9
+                                   },
+                       "id":  4,
+                       "panels":  [
+
+                                  ],
+                       "title":  "02 Â· Calidad | Cobertura de lÃ­neas c8 / LCOV",
+                       "type":  "row"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-ci-history"
+                                      },
+                       "description":  "100 Ã lÃ­neas cubiertas / lÃ­neas instrumentadas, por mÃ³dulo.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "percent"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  0,
+                                       "y":  10
+                                   },
+                       "id":  5,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-ci-history"
+                                                          },
+                                           "expr":  "last_over_time(vicity_ci_test_coverage_percent{branch=~\"${branch:regex}\",service=~\"${service:regex}\"}[$__interval])",
+                                           "instant":  false,
+                                           "legendFormat":  "{{service}} Â· {{branch}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "Cobertura histÃ³rica",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-ci-history"
+                                      },
+                       "description":  "Ãltimo reporte disponible en el rango; ausente no significa 0%.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "percent"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  12,
+                                       "y":  10
+                                   },
+                       "id":  6,
+                       "options":  {
+                                       "graphMode":  "none",
+                                       "reduceOptions":  {
+                                                             "calcs":  [
+                                                                           "lastNotNull"
+                                                                       ],
+                                                             "fields":  "",
+                                                             "values":  false
+                                                         },
+                                       "textMode":  "value_and_name"
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-ci-history"
+                                                          },
+                                           "expr":  "last_over_time(vicity_ci_test_coverage_percent{branch=~\"${branch:regex}\",service=~\"${service:regex}\"}[$__range])",
+                                           "instant":  true,
+                                           "legendFormat":  "{{service}} Â· {{branch}}",
+                                           "range":  false,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "Ãltima cobertura por mÃ³dulo",
+                       "type":  "stat"
+                   },
+                   {
+                       "collapsed":  false,
+                       "gridPos":  {
+                                       "h":  1,
+                                       "w":  24,
+                                       "x":  0,
+                                       "y":  18
+                                   },
+                       "id":  7,
+                       "panels":  [
+
+                                  ],
+                       "title":  "03 Â· Kubernetes | Recursos de contenedor (no proceso)",
+                       "type":  "row"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "kubelet/cAdvisor; segundos de CPU por segundo.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "cores"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  0,
+                                       "y":  19
+                                   },
+                       "id":  8,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "sum by (environment,namespace,pod,container) (rate(container_cpu_usage_seconds_total{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"}[$__rate_interval]))",
+                                           "instant":  false,
+                                           "legendFormat":  "{{environment}} Â· {{namespace}}/{{pod}} Â· {{container}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "CPU por contenedor",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "kubelet/cAdvisor; no es RSS del proceso Node.js.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "bytes"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  12,
+                                       "y":  19
+                                   },
+                       "id":  9,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "sum by (environment,namespace,pod,container) (container_memory_working_set_bytes{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"})",
+                                           "instant":  false,
+                                           "legendFormat":  "{{environment}} Â· {{namespace}}/{{pod}} Â· {{container}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "Memoria working set por contenedor",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "Requiere kube-state-metrics y requests positivos; puede superar 100%. Sin request no se grafica.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "percent"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  0,
+                                       "y":  27
+                                   },
+                       "id":  10,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "100 * (sum by (environment,namespace,pod,container) (rate(container_cpu_usage_seconds_total{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"}[$__rate_interval]))) / (max by (environment,namespace,pod,container) (kube_pod_container_resource_requests{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\",resource=\"cpu\"}) \u003e 0)",
+                                           "instant":  false,
+                                           "legendFormat":  "{{environment}} Â· {{namespace}}/{{pod}} Â· {{container}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "CPU / request",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "Requiere kube-state-metrics y requests positivos; puede superar 100%. Sin request no se grafica.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "percent"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  12,
+                                       "y":  27
+                                   },
+                       "id":  11,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "100 * (sum by (environment,namespace,pod,container) (container_memory_working_set_bytes{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"})) / (max by (environment,namespace,pod,container) (kube_pod_container_resource_requests{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\",resource=\"memory\"}) \u003e 0)",
+                                           "instant":  false,
+                                           "legendFormat":  "{{environment}} Â· {{namespace}}/{{pod}} Â· {{container}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "MEMORY / request",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "Requiere kube-state-metrics y lÃ­mites positivos; sin lÃ­mite no se grafica.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "percent"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  0,
+                                       "y":  35
+                                   },
+                       "id":  12,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "100 * (sum by (environment,namespace,pod,container) (rate(container_cpu_usage_seconds_total{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"}[$__rate_interval]))) / (max by (environment,namespace,pod,container) (kube_pod_container_resource_limits{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\",resource=\"cpu\"}) \u003e 0)",
+                                           "instant":  false,
+                                           "legendFormat":  "{{environment}} Â· {{namespace}}/{{pod}} Â· {{container}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "CPU / limit",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "Requiere kube-state-metrics y lÃ­mites positivos; sin lÃ­mite no se grafica.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "percent"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  12,
+                                       "y":  35
+                                   },
+                       "id":  13,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "100 * (sum by (environment,namespace,pod,container) (container_memory_working_set_bytes{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"})) / (max by (environment,namespace,pod,container) (kube_pod_container_resource_limits{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\",resource=\"memory\"}) \u003e 0)",
+                                           "instant":  false,
+                                           "legendFormat":  "{{environment}} Â· {{namespace}}/{{pod}} Â· {{container}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "MEMORY / limit",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "collapsed":  false,
+                       "gridPos":  {
+                                       "h":  1,
+                                       "w":  24,
+                                       "x":  0,
+                                       "y":  43
+                                   },
+                       "id":  14,
+                       "panels":  [
+
+                                  ],
+                       "title":  "04 Â· AplicaciÃ³n | HTTP y disponibilidad",
+                       "type":  "row"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "Contadores de aplicaciÃ³n separados por clase.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "reqps"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  0,
+                                       "y":  44
+                                   },
+                       "id":  15,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "sum by (service,environment,namespace,status_class) (rate(vicity_http_errors_total{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}[$__rate_interval]))",
+                                           "instant":  false,
+                                           "legendFormat":  "{{service}} Â· {{environment}} Â· {{namespace}} Â· {{status_class}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "Respuestas 4xx / 5xx por segundo",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "Respuestas de cada clase / total; no calcula porcentaje sin trÃ¡fico.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "percent"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  12,
+                                       "y":  44
+                                   },
+                       "id":  16,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "100 * (sum by (service,environment,namespace,status_class) (rate(vicity_http_errors_total{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}[$__rate_interval]))) / ignoring(status_class) group_left() (sum by (service,environment,namespace) (rate(vicity_http_requests_total{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}[$__rate_interval])) \u003e 0)",
+                                           "instant":  false,
+                                           "legendFormat":  "{{service}} Â· {{environment}} Â· {{namespace}} Â· {{status_class}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "Porcentaje de errores por clase",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "Puede contar la misma peticiÃ³n en el proxy y el backend; las series se mantienen separadas.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "reqps"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  0,
+                                       "y":  52
+                                   },
+                       "id":  17,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "sum by (service,environment,namespace) (rate(vicity_http_requests_total{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}[$__rate_interval]))",
+                                           "instant":  false,
+                                           "legendFormat":  "{{service}} Â· {{environment}} Â· {{namespace}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "Peticiones por segundo",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "EstimaciÃ³n a partir del histograma de duraciÃ³n.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "s"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  12,
+                                       "y":  52
+                                   },
+                       "id":  18,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "histogram_quantile(0.95, sum by (service,environment,namespace,le) (rate(vicity_http_request_duration_seconds_bucket{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}[$__rate_interval])))",
+                                           "instant":  false,
+                                           "legendFormat":  "{{service}} Â· {{environment}} Â· {{namespace}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "Latencia HTTP p95",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "Estado del scrape, no garantiza disponibilidad HTTP.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "none"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  0,
+                                       "y":  60
+                                   },
+                       "id":  19,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "up{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",service!=\"\"}",
+                                           "instant":  false,
+                                           "legendFormat":  "{{service}} Â· {{environment}} Â· {{namespace}} Â· {{instance}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "Scrape UP / DOWN (1 / 0)",
+                       "type":  "timeseries"
+                   },
+                   {
+                       "datasource":  {
+                                          "type":  "prometheus",
+                                          "uid":  "vicity-prometheus"
+                                      },
+                       "description":  "Blackbox Exporter; en AWS solo si hay sondas configuradas.",
+                       "fieldConfig":  {
+                                           "defaults":  {
+                                                            "noValue":  "Sin datos",
+                                                            "unit":  "none"
+                                                        },
+                                           "overrides":  [
+
+                                                         ]
+                                       },
+                       "gridPos":  {
+                                       "h":  8,
+                                       "w":  12,
+                                       "x":  12,
+                                       "y":  60
+                                   },
+                       "id":  20,
+                       "options":  {
+                                       "legend":  {
+                                                      "displayMode":  "list",
+                                                      "placement":  "bottom"
+                                                  },
+                                       "tooltip":  {
+                                                       "mode":  "multi"
+                                                   }
+                                   },
+                       "targets":  [
+                                       {
+                                           "datasource":  {
+                                                              "type":  "prometheus",
+                                                              "uid":  "vicity-prometheus"
+                                                          },
+                                           "expr":  "probe_success{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}",
+                                           "instant":  false,
+                                           "legendFormat":  "{{service}} Â· {{environment}} Â· {{namespace}} Â· {{check}}",
+                                           "range":  true,
+                                           "refId":  "A"
+                                       }
+                                   ],
+                       "title":  "Sonda HTTP (1 / 0)",
+                       "type":  "timeseries"
+                   }
+               ],
+    "refresh":  "30s",
+    "schemaVersion":  41,
+    "style":  "dark",
+    "tags":  [
+                 "ep3",
+                 "ie3",
+                 "vicity"
+             ],
+    "templating":  {
+                       "list":  [
+                                    {
+                                        "allValue":  "backend|frontend",
+                                        "current":  {
+                                                        "text":  "All",
+                                                        "value":  "$__all"
+                                                    },
+                                        "includeAll":  true,
+                                        "label":  "Servicio",
+                                        "multi":  true,
+                                        "name":  "service",
+                                        "query":  "backend,frontend",
+                                        "type":  "custom"
+                                    },
+                                    {
+                                        "allValue":  ".*",
+                                        "current":  {
+                                                        "selected":  true,
+                                                        "text":  "All",
+                                                        "value":  "$__all"
+                                                    },
+                                        "datasource":  {
+                                                           "type":  "prometheus",
+                                                           "uid":  "vicity-prometheus"
+                                                       },
+                                        "definition":  "label_values(up, environment)",
+                                        "includeAll":  true,
+                                        "label":  "Entorno de runtime",
+                                        "multi":  true,
+                                        "name":  "environment",
+                                        "options":  [
+
+                                                    ],
+                                        "query":  "label_values(up, environment)",
+                                        "refresh":  1,
+                                        "type":  "query"
+                                    },
+                                    {
+                                        "allValue":  ".*",
+                                        "current":  {
+                                                        "selected":  true,
+                                                        "text":  "All",
+                                                        "value":  "$__all"
+                                                    },
+                                        "datasource":  {
+                                                           "type":  "prometheus",
+                                                           "uid":  "vicity-prometheus"
+                                                       },
+                                        "definition":  "label_values(up, namespace)",
+                                        "includeAll":  true,
+                                        "label":  "Namespace (All incluye local)",
+                                        "multi":  true,
+                                        "name":  "namespace",
+                                        "options":  [
+
+                                                    ],
+                                        "query":  "label_values(up, namespace)",
+                                        "refresh":  1,
+                                        "type":  "query"
+                                    },
+                                    {
+                                        "allValue":  ".*",
+                                        "current":  {
+                                                        "selected":  true,
+                                                        "text":  "All",
+                                                        "value":  "$__all"
+                                                    },
+                                        "datasource":  {
+                                                           "type":  "prometheus",
+                                                           "uid":  "vicity-ci-history"
+                                                       },
+                                        "definition":  "label_values({__name__=~\"vicity_ci_.*\"}, branch)",
+                                        "includeAll":  true,
+                                        "label":  "Rama CI",
+                                        "multi":  true,
+                                        "name":  "branch",
+                                        "options":  [
+
+                                                    ],
+                                        "query":  "label_values({__name__=~\"vicity_ci_.*\"}, branch)",
+                                        "refresh":  1,
+                                        "type":  "query"
+                                    },
+                                    {
+                                        "allValue":  ".*",
+                                        "current":  {
+                                                        "selected":  true,
+                                                        "text":  "All",
+                                                        "value":  "$__all"
+                                                    },
+                                        "datasource":  {
+                                                           "type":  "prometheus",
+                                                           "uid":  "vicity-ci-history"
+                                                       },
+                                        "definition":  "label_values(vicity_ci_deployment_duration_seconds, environment)",
+                                        "includeAll":  true,
+                                        "label":  "Entorno de despliegue",
+                                        "multi":  true,
+                                        "name":  "deploy_environment",
+                                        "options":  [
+
+                                                    ],
+                                        "query":  "label_values(vicity_ci_deployment_duration_seconds, environment)",
+                                        "refresh":  1,
+                                        "type":  "query"
+                                    }
+                                ]
+                   },
+    "time":  {
+                 "from":  "now-7d",
+                 "to":  "now"
+             },
+    "timezone":  "browser",
+    "title":  "EP3 | Observabilidad \u0026 CI/CD | Kevin Gallardo",
+    "uid":  "ep3-kevin-gallardo",
+    "version":  1
+}

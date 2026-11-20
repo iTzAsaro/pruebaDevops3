@@ -1,0 +1,82 @@
+﻿[
+    {
+        "query":  "last_over_time(vicity_ci_deployment_duration_seconds{branch=~\"${branch:regex}\",environment=~\"${deploy_environment:regex}\"}[$__interval])",
+        "title":  "DuraciÃ³n histÃ³rica del job de despliegue",
+        "id":  2
+    },
+    {
+        "query":  "last_over_time(vicity_ci_deployment_duration_seconds{branch=~\"${branch:regex}\",environment=~\"${deploy_environment:regex}\"}[$__range]) and (timestamp(last_over_time(vicity_ci_deployment_duration_seconds{branch=~\"${branch:regex}\",environment=~\"${deploy_environment:regex}\"}[$__range])) == on(environment,branch) group_left max by (environment,branch) (timestamp(last_over_time(vicity_ci_deployment_duration_seconds{branch=~\"${branch:regex}\",environment=~\"${deploy_environment:regex}\"}[$__range]))))",
+        "title":  "Ãltimo despliegue por entorno y rama",
+        "id":  3
+    },
+    {
+        "query":  "last_over_time(vicity_ci_test_coverage_percent{branch=~\"${branch:regex}\",service=~\"${service:regex}\"}[$__interval])",
+        "title":  "Cobertura histÃ³rica",
+        "id":  5
+    },
+    {
+        "query":  "last_over_time(vicity_ci_test_coverage_percent{branch=~\"${branch:regex}\",service=~\"${service:regex}\"}[$__range])",
+        "title":  "Ãltima cobertura por mÃ³dulo",
+        "id":  6
+    },
+    {
+        "query":  "sum by (environment,namespace,pod,container) (rate(container_cpu_usage_seconds_total{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"}[$__rate_interval]))",
+        "title":  "CPU por contenedor",
+        "id":  8
+    },
+    {
+        "query":  "sum by (environment,namespace,pod,container) (container_memory_working_set_bytes{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"})",
+        "title":  "Memoria working set por contenedor",
+        "id":  9
+    },
+    {
+        "query":  "100 * (sum by (environment,namespace,pod,container) (rate(container_cpu_usage_seconds_total{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"}[$__rate_interval]))) / (max by (environment,namespace,pod,container) (kube_pod_container_resource_requests{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\",resource=\"cpu\"}) \u003e 0)",
+        "title":  "CPU / request",
+        "id":  10
+    },
+    {
+        "query":  "100 * (sum by (environment,namespace,pod,container) (container_memory_working_set_bytes{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"})) / (max by (environment,namespace,pod,container) (kube_pod_container_resource_requests{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\",resource=\"memory\"}) \u003e 0)",
+        "title":  "MEMORY / request",
+        "id":  11
+    },
+    {
+        "query":  "100 * (sum by (environment,namespace,pod,container) (rate(container_cpu_usage_seconds_total{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"}[$__rate_interval]))) / (max by (environment,namespace,pod,container) (kube_pod_container_resource_limits{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\",resource=\"cpu\"}) \u003e 0)",
+        "title":  "CPU / limit",
+        "id":  12
+    },
+    {
+        "query":  "100 * (sum by (environment,namespace,pod,container) (container_memory_working_set_bytes{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\"})) / (max by (environment,namespace,pod,container) (kube_pod_container_resource_limits{environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",container=~\"${service:regex}\",container!=\"\",container!=\"POD\",pod!=\"\",resource=\"memory\"}) \u003e 0)",
+        "title":  "MEMORY / limit",
+        "id":  13
+    },
+    {
+        "query":  "sum by (service,environment,namespace,status_class) (rate(vicity_http_errors_total{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}[$__rate_interval]))",
+        "title":  "Respuestas 4xx / 5xx por segundo",
+        "id":  15
+    },
+    {
+        "query":  "100 * (sum by (service,environment,namespace,status_class) (rate(vicity_http_errors_total{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}[$__rate_interval]))) / ignoring(status_class) group_left() (sum by (service,environment,namespace) (rate(vicity_http_requests_total{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}[$__rate_interval])) \u003e 0)",
+        "title":  "Porcentaje de errores por clase",
+        "id":  16
+    },
+    {
+        "query":  "sum by (service,environment,namespace) (rate(vicity_http_requests_total{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}[$__rate_interval]))",
+        "title":  "Peticiones por segundo",
+        "id":  17
+    },
+    {
+        "query":  "histogram_quantile(0.95, sum by (service,environment,namespace,le) (rate(vicity_http_request_duration_seconds_bucket{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}[$__rate_interval])))",
+        "title":  "Latencia HTTP p95",
+        "id":  18
+    },
+    {
+        "query":  "up{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\",service!=\"\"}",
+        "title":  "Scrape UP / DOWN (1 / 0)",
+        "id":  19
+    },
+    {
+        "query":  "probe_success{service=~\"${service:regex}\",environment=~\"${environment:regex}\",namespace=~\"${namespace:regex}\"}",
+        "title":  "Sonda HTTP (1 / 0)",
+        "id":  20
+    }
+]
