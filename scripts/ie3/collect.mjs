@@ -156,8 +156,10 @@ async function main(env) {
       throw new Error('Descarga ZIP fallida o demasiado grande');
     }
     try {
-      return execFileSync('python3', [fileURLToPath(new URL('./read-lcov.py', import.meta.url))], {
+      const pythonBin = process.platform === 'win32' ? 'python' : '/usr/bin/python3';
+      return execFileSync(pythonBin, [fileURLToPath(new URL('./read-lcov.py', import.meta.url))], {
         input: bytes, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024, timeout: 15000, windowsHide: true,
+        env: { PATH: '/usr/local/bin:/usr/bin:/bin' }
       });
     } catch {
       throw new Error('ZIP rechazado o lector LCOV no disponible');
