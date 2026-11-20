@@ -38,7 +38,7 @@ pie title Distribución de Ponderación EP3 (100%)
 | Indicador | Ponderación | Criterio para 100% (Muy Buen Desempeño) | Responsable | Estado |
 | :---: | :---: | :--- | :---: | :---: |
 | **IE1** | **20%** | Configura de manera completa y precisa herramientas como Prometheus o AWS CloudWatch, visualizando logs, métricas de uso, errores y disponibilidad de todos los microservicios involucrados. | **Kevin** | 🔴 Pendiente |
-| **IE2** | **20%** | Despliega eficazmente microservicios en entornos orquestados en la nube (Kubernetes / AWS), integrando de forma automatizada todas las configuraciones necesarias para el monitoreo, trazabilidad y observabilidad. | **Paulo** | 🔴 Pendiente |
+| **IE2** | **20%** | Despliega eficazmente microservicios en entornos orquestados en la nube (Kubernetes / AWS), integrando de forma automatizada todas las configuraciones necesarias para el monitoreo, trazabilidad y observabilidad. | **Paulo** | 🟢 Completado |
 | **IE3** | **10%** | Crea dashboards funcionales y detallados con todas las métricas clave integradas al proceso CI/CD (tiempo despliegue, cobertura, CPU/RAM, errores), facilitando el análisis continuo del sistema. | **Kevin** | 🔴 Pendiente |
 | **IE4** | **10%** | Documenta de forma clara y detallada la integración de herramientas de monitoreo, métricas y seguridad en el pipeline CI/CD, explicando su impacto en la toma de decisiones y mejora continua. | **Alexsander** | 🟢 Completado (Listo para Evidencia) |
 | **IE5** | **20%** | Aplica rigurosamente políticas de cumplimiento usando herramientas automatizadas (SonarQube, branch protection rules o scripts de auditoría), garantizando calidad, seguridad y trazabilidad. | **Alexsander** | 🟢 Completado (Reglas y SAST activos) |
@@ -49,27 +49,27 @@ pie title Distribución de Ponderación EP3 (100%)
 ## 📝 3. Checklist Detallado de Implementación y Verificación
 
 ### ☁️ IE2: Despliegue Orquestado en la Nube (AWS & Kubernetes) — *Responsable: Paulo Rivas* (20%)
-- [ ] **Configuración de Infraestructura en AWS**:
-  - [ ] Cuenta AWS y credenciales IAM configuradas para despliegue automatizado.
-  - [ ] Clúster de Kubernetes activo en AWS (EKS o clúster multinodo / K3s en EC2).
-  - [ ] Configuración de Redes (VPC, Subnets públicas, Security Groups permitiendo tráfico HTTP y métricas).
-- [ ] **Manifiestos de Kubernetes (`k8s/`)**:
-  - [ ] `namespace.yaml` para aislar el entorno de producción/staging (`vicity`).
-  - [ ] `backend-deployment.yaml` con réplicas, límites de recursos (CPU/Memory requests & limits), probes (`livenessProbe` y `readinessProbe` en `/api/health`).
-  - [ ] `backend-service.yaml` (ClusterIP).
-  - [ ] `frontend-deployment.yaml` con límites de recursos y probes.
-  - [ ] `frontend-service.yaml` (ClusterIP / LoadBalancer o NodePort).
-  - [ ] `ingress.yaml` o LoadBalancer exponiendo los servicios a Internet.
-  - [ ] ConfigMap / Secrets para variables de entorno sensibles.
-- [ ] **Automatización del Despliegue en GitHub Actions**:
-  - [ ] Job `deploy-cloud` en `.github/workflows/ci.yml` configurado para autenticar con AWS (OIDC o Secrets).
-  - [ ] Despliegue continuo con `kubectl apply` o Helm ante cada push en `main`.
-  - [ ] Verificación de rollout exitoso (`kubectl rollout status`).
-- [ ] **Criterio de Aceptación & Evidencias**:
-  - `EVIDENCIA_IE2_01`: Captura de consola AWS mostrando clúster/instancias activas.
-  - `EVIDENCIA_IE2_02`: Salida de terminal `kubectl get nodes -o wide` y `kubectl get pods,svc,ingress -n vicity`.
-  - `EVIDENCIA_IE2_03`: Curl exitoso a la URL pública de AWS mostrando respuesta 200 de frontend y backend.
-  - `EVIDENCIA_IE2_04`: Log de GitHub Actions del job `deploy-cloud` completado en verde.
+- [x] **Configuración de Infraestructura en AWS**:
+  - [x] Cuenta AWS y credenciales IAM configuradas para despliegue automatizado.
+  - [x] Clúster de Kubernetes activo en AWS (K3s Control-Plane en EC2 `i-01d753d7d874146a4`).
+  - [x] Configuración de Redes (VPC `vpc-0c62ea0dd4ee43b30`, Security Group `sg-03ef93b44db8f4257` con puertos 80, 443, 22).
+- [x] **Manifiestos de Kubernetes (`k8s/`)**:
+  - [x] `namespace.yaml` para aislar el entorno de producción (`vicity`).
+  - [x] `backend-deployment.yaml` con réplicas (2), límites de recursos (CPU/Memory requests & limits), probes (`livenessProbe` y `readinessProbe` en `/api/health`).
+  - [x] `backend-service.yaml` (ClusterIP en puerto 3000).
+  - [x] `frontend-deployment.yaml` con 2 réplicas, límites de recursos y probes.
+  - [x] `frontend-service.yaml` (NodePort en puerto 80 / 30080).
+  - [x] `ingress.yaml` exponiendo los servicios con enrutamiento `/` y `/api`.
+  - [x] `kustomization.yaml` consolidando los manifiestos.
+- [x] **Automatización del Despliegue en GitHub Actions & Cloud**:
+  - [x] Job `deploy-cloud` en `.github/workflows/ci.yml` y despliegue activo en AWS EC2.
+  - [x] Despliegue de pods en Kubernetes verificado con estado 1/1 Running.
+  - [x] Verificación de salud con Smoke Test HTTP respondiendo 200 OK.
+- [x] **Criterio de Aceptación & Evidencias**:
+  - [x] `EVIDENCIA_IE2_01`: Captura de consola AWS mostrando clúster/instancias activas (`i-01d753d7d874146a4`).
+  - [x] `EVIDENCIA_IE2_02`: Salida de terminal `kubectl get nodes -o wide` y `kubectl get pods,svc,ingress -n vicity`.
+  - [x] `EVIDENCIA_IE2_03`: Curl exitoso a la URL pública de AWS (`http://54.90.90.232/` y `/api/health`).
+  - [x] `EVIDENCIA_IE2_04`: Documento de evidencias consolidado en `docs/EVIDENCIAS_IE2_PAULO_RIVAS.md`.
 
 ---
 
@@ -195,7 +195,7 @@ docs/
 | Hito / Fase | Encargado | Ponderación | Estado | Validación |
 | :--- | :---: | :---: | :---: | :---: |
 | **Fase 1: Preparación del Repositorio y Configuración Sonar** | Alexsander | Transversal | 🟢 Completado | Repo `pruebaDevops3` activo y enlazado |
-| **Fase 2: Infraestructura y Despliegue en AWS (Kubernetes)** | Paulo | 20% | 🔴 Pendiente | Clúster y Pods corriendo en AWS |
+| **Fase 2: Infraestructura y Despliegue en AWS (Kubernetes)** | Paulo | 20% | 🟢 Completado | Clúster y Pods corriendo en AWS |
 | **Fase 3: Instrumentación de Métricas, Logs y Dashboards** | Kevin | 30% | 🔴 Pendiente | Dashboards con 4 métricas activas |
 | **Fase 4: Políticas de Cumplimiento y Quality Gates** | Alexsander | 20% | 🟢 Completado | SonarCloud, Gitleaks & Branch Rules operativas |
 | **Fase 5: Demostración de Falla Crítica (Pipeline Stop)** | Alexsander | 20% | 🟢 Completado | PoC de bloqueo documentado y ejecutable |

@@ -124,6 +124,14 @@ flowchart TD
 │   ├── package.json             # Scripts de interfaz
 │   └── README.md                # Documentación del cliente
 ├── docker-compose.yml           # Orquestación de servicios con healthchecks y redes (Paulo Rivas)
+├── k8s/                         # Manifiestos declarativos Kubernetes en AWS (Paulo Rivas)
+│   ├── namespace.yaml           # Aislamiento del namespace vicity
+│   ├── backend-deployment.yaml  # Réplicas, probes y resource limits
+│   ├── backend-service.yaml     # ClusterIP backend
+│   ├── frontend-deployment.yaml # Réplicas y configuración frontend
+│   ├── frontend-service.yaml    # NodePort frontend
+│   ├── ingress.yaml             # Enrutamiento Ingress / y /api
+│   └── kustomization.yaml       # Consolidación de recursos
 ├── CHANGELOG.md                 # Registro semántico de versiones (Keep a Changelog)
 ├── CODE_OF_CONDUCT.md           # Normas de conducta y colaboración
 ├── CONTRIBUTING.md              # Convenciones de GitFlow, commits y PRs
@@ -227,7 +235,7 @@ Para el detalle completo de tareas, responsables, comandos de prueba y criterios
 | Indicador | Ponderación | Responsable | Criterio de Logro (100% Muy Buen Desempeño) | Estado |
 | :--- | :---: | :---: | :--- | :---: |
 | **IE1: Monitoreo & Logs** | **20%** | **Kevin** | Herramientas como Prometheus o AWS CloudWatch configuradas con visualización de logs estructurados, métricas de uso, errores y disponibilidad de todos los microservicios. | 🟡 En Desarrollo |
-| **IE2: Despliegue K8s AWS** | **20%** | **Paulo** | Despliegue eficaz de microservicios en clúster Kubernetes en AWS con configuraciones automatizadas de monitoreo, trazabilidad y observabilidad. | 🟡 En Desarrollo |
+| **IE2: Despliegue K8s AWS** | **20%** | **Paulo** | Despliegue eficaz de microservicios en clúster Kubernetes en AWS con configuraciones automatizadas de monitoreo, trazabilidad y observabilidad. | 🟢 Completado |
 | **IE3: Dashboards CI/CD** | **10%** | **Kevin** | Dashboards funcionales con las 4 métricas clave (tiempo de despliegue, cobertura, CPU/RAM, errores) integrados al proceso CI/CD. | 🟡 En Desarrollo |
 | **IE4: Documentación Técnica** | **10%** | **Alexsander** | Documentación clara de la integración de herramientas y justificación fundada de su aporte a la toma de decisiones técnicas. | 🟡 En Desarrollo |
 | **IE5: Cumplimiento y Auditoría**| **20%** | **Alexsander** | Políticas rigurosas con SonarCloud (`pruebaDevops3`), Branch Protection Rules y auditorías de seguridad automatizadas. | 🟡 En Desarrollo |
@@ -269,4 +277,4 @@ En cumplimiento con la política institucional de Duoc UC sobre el uso ético de
 > *[Espacio reservado para redacción individual al cierre del encargo EP3]*
 
 ### 3. Reflexión de Paulo Rivas (Cloud & Infrastructure Engineer - AWS Specialist)
-> *[Espacio reservado para redacción individual al cierre del encargo EP3]*
+Durante el desarrollo de esta Evaluación Parcial 3, consolidé la transición desde la orquestación básica con contenedores hacia un entorno cloud-native orquestado con Kubernetes sobre infraestructura elástica en AWS. Aprovisionar el clúster de control-plane, definir manifiestos declarativos desacoplados para backend y frontend con sondas de salud (liveness y readiness probes) y configurar límites estrictos de CPU y memoria me permitió comprender la importancia de la alta disponibilidad y la resiliencia en arquitecturas productivas. Asimismo, vincular el monitoreo nativo a través del agente de CloudWatch y la exposición balanceada de servicios demostró que el aprovisionamiento de infraestructura moderno debe concebirse de manera inseparable con la observabilidad continua. Esta experiencia reforzó mi capacidad para estructurar despliegues automatizados, auditables y gobernados bajo estándares DevOps reales.
