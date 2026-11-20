@@ -25,6 +25,7 @@ function getHealth(req, res) {
     environment: config.ENVIRONMENT,
     author: config.AUTHOR,
     uptimeSeconds,
+    dependencies: {}, // No external dependencies to probe.
     memoryUsageMB: {
       rss: Math.round(memory.rss / 1024 / 1024),
       heapTotal: Math.round(memory.heapTotal / 1024 / 1024),

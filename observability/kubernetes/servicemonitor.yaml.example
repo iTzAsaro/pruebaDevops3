@@ -1,0 +1,41 @@
+# Plantilla: usar únicamente si Paulo confirma CRD y selección por Prometheus Operator.
+# Copiar y adaptar cada documento antes de integrarlo al despliegue existente.
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vicity-backend
+  namespace: replace-monitor-namespace
+  labels:
+    replace-monitor-label: replace-monitor-value
+spec:
+  namespaceSelector:
+    matchNames: [replace-app-namespace]
+  selector:
+    matchLabels:
+      replace-service-label: replace-backend-value
+  endpoints:
+    - port: replace-backend-port-name
+      path: /metrics
+      scheme: http
+      interval: 30s
+      scrapeTimeout: 10s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: vicity-frontend
+  namespace: replace-monitor-namespace
+  labels:
+    replace-monitor-label: replace-monitor-value
+spec:
+  namespaceSelector:
+    matchNames: [replace-app-namespace]
+  selector:
+    matchLabels:
+      replace-service-label: replace-frontend-value
+  endpoints:
+    - port: replace-frontend-port-name
+      path: /metrics
+      scheme: http
+      interval: 30s
+      scrapeTimeout: 10s

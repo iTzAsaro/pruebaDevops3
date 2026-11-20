@@ -1,0 +1,15 @@
+groups:
+  - name: vicity-local
+    rules:
+      - alert: VicityMetricsTargetDown
+        expr: up{job="vicity-apps"} == 0
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: 'Scrape fallido: {{ $labels.service }}'
+      - alert: VicityHTTPProbeFailed
+        expr: probe_success{job="vicity-http-probes"} == 0 or up{job="vicity-http-probes"} == 0
+        for: 1m
+        labels: {severity: warning}
+        annotations:
+          summary: 'Sonda HTTP fallida o inaccesible: {{ $labels.check }}'

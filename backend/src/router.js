@@ -42,6 +42,7 @@ class Router {
 
       const match = pathname.match(route.regex);
       if (match) {
+        req.routePattern = route.pattern;
         const params = {};
         route.paramNames.forEach((name, index) => {
           params[name] = decodeURIComponent(match[index + 1]);
