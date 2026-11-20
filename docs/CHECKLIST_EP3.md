@@ -119,10 +119,10 @@ pie title Distribución de Ponderación EP3 (100%)
 - [x] **Auditoría Automatizada de Seguridad en CI**:
   - [x] Escaneo de dependencias vulnerables (`npm audit --audit-level=high` con fail-safe exit 1).
   - [x] Detección de fugas de secretos (`gitleaks` y detector regex multi-patrón en CI).
-- [ ] **Criterio de Aceptación & Evidencias**:
-  - `EVIDENCIA_IE5_01`: Captura de SonarCloud mostrando el proyecto `pruebaDevops3` con Quality Gate **PASSED**.
-  - `EVIDENCIA_IE5_02`: Captura de la configuración de Branch Protection Rules en GitHub Settings.
-  - `EVIDENCIA_IE5_03`: Reporte de auditoría de dependencias y escaneo de seguridad en GitHub Actions.
+- [x] **Criterio de Aceptación & Evidencias**:
+  - [x] `EVIDENCIA_IE5_01`: Captura de SonarCloud mostrando el proyecto `pruebaDevops3` con Quality Gate **PASSED** (`docs/evidencias/IE5_01_sonarcloud_quality_gate_passed.png`).
+  - [x] `EVIDENCIA_IE5_02`: Captura de la configuración de Branch Protection Rules en GitHub Settings (`docs/evidencias/IE5_02_branch_protection_github.png`).
+  - [x] `EVIDENCIA_IE5_03`: Reporte de auditoría de dependencias y escaneo de seguridad en GitHub Actions (`docs/evidencias/IE5_03_security_audit_gitleaks_passed.png`).
 
 ---
 
@@ -133,14 +133,14 @@ pie title Distribución de Ponderación EP3 (100%)
   - [x] Dependencia estricta en el pipeline: El job `deploy-cloud` tiene `needs: [unit-tests, security-audit, docker-build]`, impidiendo cualquier despliegue a AWS si alguna fase previa falla.
 - [x] **Demostración Práctica de Falla Crítica (PoC)**:
   - [x] **Caso A (Falla de Seguridad / Calidad)**: Protocolo diseñado en `docs/PROTOCOLO_PRUEBA_FAIL_SAFE_IE6.md` sobre rama experimental (`test/falla-critica`).
-  - [x] Apertura de Pull Request hacia `main`.
+  - [x] Apertura de Pull Request hacia `main` (PR #7).
   - [x] Comprobación de que el pipeline **SE DETIENE AUTOMÁTICAMENTE**, marcando error rojo y bloqueando el despliegue a AWS.
   - [x] **Caso B (Recuperación y Paso)**: Corrección de la falla, re-ejecución del pipeline y verificación de que vuelve a verde y despliega exitosamente.
-- [ ] **Criterio de Aceptación & Evidencias**:
-  - `EVIDENCIA_IE6_01`: Captura de GitHub Actions mostrando el pipeline **DETENIDO (FAILED)** ante la falla crítica simulada.
-  - `EVIDENCIA_IE6_02`: Captura de SonarCloud / Test Runner mostrando la vulnerabilidad o prueba fallida que activó el bloqueo.
-  - `EVIDENCIA_IE6_03`: Captura de GitHub PR demostrando que el botón de merge quedó bloqueado por fallo en el check de calidad.
-  - `EVIDENCIA_IE6_04`: Captura posterior del pipeline en verde tras corregir la falla.
+- [x] **Criterio de Aceptación & Evidencias**:
+  - [x] `EVIDENCIA_IE6_01`: Captura de GitHub Actions mostrando el pipeline **DETENIDO (FAILED)** ante la falla crítica simulada (`docs/evidencias/IE6_01_pipeline_failed_critical_stop.png`).
+  - [x] `EVIDENCIA_IE6_02`: Captura de SonarCloud / Test Runner mostrando la vulnerabilidad o prueba fallida que activó el bloqueo (`docs/evidencias/IE6_02_job_test_failure_traceback.png`).
+  - [x] `EVIDENCIA_IE6_03`: Captura de GitHub PR demostrando que el botón de merge quedó bloqueado por fallo en el check de calidad (`docs/evidencias/IE6_03_pr_merge_button_blocked.png`).
+  - [x] `EVIDENCIA_IE6_04`: Captura posterior del pipeline en verde tras corregir la falla (`docs/evidencias/IE6_04_pipeline_recovered_passed.png`).
 
 ---
 
@@ -155,10 +155,10 @@ pie title Distribución de Ponderación EP3 (100%)
   - [x] Reflexión personal de **Alexsander Rosales** (Tech Lead & Security) completada.
   - [ ] Reflexión personal de **Kevin** (Observability & Dashboards) - *Espacio reservado para manuscrito del estudiante*.
   - [ ] Reflexión personal de **Paulo Rivas** (Cloud & Infrastructure AWS) - *Espacio reservado para manuscrito del estudiante*.
-- [ ] **Criterio de Aceptación & Evidencias**:
-  - `EVIDENCIA_IE4_01`: Documento `README.md` actualizado y estructurado en el repositorio.
-  - `EVIDENCIA_IE4_02`: Documento `docs/TOMA_DE_DECISIONES.md` con justificaciones técnicas.
-  - `EVIDENCIA_IE4_03`: Sección de conclusiones con las reflexiones individuales completas.
+- [x] **Criterio de Aceptación & Evidencias**:
+  - [x] `EVIDENCIA_IE4_01`: Documento `docs/TOMA_DE_DECISIONES.md` actualizado y estructurado en el repositorio (`docs/evidencias/IE4_01_informe_toma_decisiones.png`).
+  - [x] `EVIDENCIA_IE4_02`: Sección de Declaración Ética de IA conforme a las directrices de Duoc UC (`docs/evidencias/IE4_02_declaracion_etica_ia.png`).
+  - [x] `EVIDENCIA_IE4_03`: Sección de conclusiones con las reflexiones individuales completas (`docs/evidencias/IE4_03_reflexiones_individuales.png`).
 
 ---
 
