@@ -3,7 +3,7 @@
 > **Asignatura:** DOY0101 - Ingeniería DevOps  
 > **Institución:** Duoc UC  
 > **Evaluación:** Evaluación Parcial 3 (30% ponderación)  
-> **Estado:** 🟡 En Desarrollo / Implementación de Observabilidad, K8s en AWS y Gobernanza  
+> **Estado:** 🟢 Completado / 100% Implementado, Auditado y Desplegado en AWS  
 > **Matriz y Checklist:** [docs/CHECKLIST_EP3.md](docs/CHECKLIST_EP3.md)
 
 [![CI/CD Pipeline](https://github.com/iTzAsaro/pruebaDevops3/actions/workflows/ci.yml/badge.svg)](https://github.com/iTzAsaro/pruebaDevops3/actions/workflows/ci.yml)
@@ -33,6 +33,24 @@ El encargo de la **Evaluación Parcial N°3** consiste en extender el pipeline D
 4. **Documentación Técnica y Toma de Decisiones (IE4 - 10%):** Documentación de la integración de observabilidad y justificación de cómo las métricas fundamentan decisiones técnicas y mejora continua.
 5. **Políticas de Cumplimiento (IE5 - 20%):** Aplicación rigurosa de políticas mediante SonarCloud (`pruebaDevops3`), Branch Protection Rules en GitHub y scripts de auditoría automatizada.
 6. **Mecanismo de Bloqueo ante Fallas Críticas (IE6 - 20%):** Demostración empírica de que el pipeline se interrumpe automáticamente ante fallas críticas de seguridad o calidad, protegiendo producción.
+
+---
+
+## 📚 Índice Maestro de Documentación y Entregables EP3
+
+| Documento | Indicadores Cubiertos | Responsable | Descripción |
+| :--- | :---: | :---: | :--- |
+| [**`docs/CHECKLIST_EP3.md`**](docs/CHECKLIST_EP3.md) | **Todos (IE1-IE6)** | Equipo | Matriz integral de cumplimiento, trazabilidad y estado de evidencias. |
+| [**`docs/TOMA_DE_DECISIONES.md`**](docs/TOMA_DE_DECISIONES.md) | **IE4 (10%)** | Alexsander | Informe técnico de decisiones basadas en métricas y declaración ética de IA. |
+| [**`docs/POLITICAS_CUMPLIMIENTO_Y_AUDITORIA_IE5.md`**](docs/POLITICAS_CUMPLIMIENTO_Y_AUDITORIA_IE5.md) | **IE5 (20%)** | Alexsander | Arquitectura de Branch Protection, escaneo SAST y SonarCloud Quality Gate. |
+| [**`docs/PROTOCOLO_PRUEBA_FAIL_SAFE_IE6.md`**](docs/PROTOCOLO_PRUEBA_FAIL_SAFE_IE6.md) | **IE6 (20%)** | Alexsander | Protocolo de PoC de corte de pipeline ante falla crítica y recuperación en PR #7. |
+| [**`docs/EVIDENCIAS_IE2_PAULO_RIVAS.md`**](docs/EVIDENCIAS_IE2_PAULO_RIVAS.md) | **IE2 (20%)** | Paulo | Aprovisionamiento en AWS EC2, clúster K8s, pods y smoke test. |
+| [**`docs/KEVIN_ENTREGA_EP3.md`**](docs/KEVIN_ENTREGA_EP3.md) | **IE1 (20%) & IE3 (10%)** | Kevin | Resumen de entrega del módulo de observabilidad, endpoints y dashboards. |
+| [**`docs/KEVIN_DASHBOARD_IE3.md`**](docs/KEVIN_DASHBOARD_IE3.md) | **IE3 (10%)** | Kevin | Especificación de los 4 paneles de Grafana y consultas PromQL. |
+| [**`docs/KEVIN_METRICAS.md`**](docs/KEVIN_METRICAS.md) | **IE1 (20%)** | Kevin | Catálogo de métricas HTTP, heap y disponibilidad en `/metrics`. |
+| [**`docs/KEVIN_STACK_MONITOREO.md`**](docs/KEVIN_STACK_MONITOREO.md) | **IE1 (20%)** | Kevin | Configuración del stack Prometheus, Grafana y Blackbox Exporter. |
+| [**`docs/KEVIN_LOGGING.md`**](docs/KEVIN_LOGGING.md) | **IE1 (20%)** | Kevin | Pipeline de recolección y formato JSON de logs estructurados. |
+| [**`docs/evidencias/`**](docs/evidencias/) | **IE4, IE5, IE6** | Alexsander | 10 Capturas de pantalla reales en alta resolución respaldando la evaluación. |
 
 ---
 
@@ -95,48 +113,66 @@ flowchart TD
 
 ```text
 ├── .github/
-│   ├── dependabot.yml           # Escaneo semanal de dependencias npm y actions
+│   ├── branch-protection-rules.json  # Definición inmutable de Branch Protection Rules (IE5)
+│   ├── dependabot.yml                # Escaneo programado de dependencias npm y actions
 │   └── workflows/
-│       └── ci.yml               # Pipeline CI/CD automatizado con Quality Gate y despliegue
+│       ├── ci.yml                    # Pipeline CI/CD integral (Tests, SonarCloud QG, Docker, Deploy AWS)
+│       └── ie3-metrics.yml           # Recolección automatizada de métricas de build y cobertura
+├── .sonarcloud.properties            # Configuración de exclusiones de SonarCloud Automatic Analysis
+├── sonar-project.properties          # Configuración de SonarCloud / SonarScanner CI
+├── docker-compose.yml                # Stack multi-contenedor de producción (Backend + Frontend)
+├── docker-compose.dev.yml            # Overlay de desarrollo local con recarga en vivo
+├── docker-compose.monitoring.yml     # Stack de observabilidad (Prometheus + Grafana + Blackbox)
 ├── docs/
-│   ├── EP3_DOY0101_Estudiante.pdf # Enunciado y rúbrica oficial de la evaluación (EP3)
-│   ├── CHECKLIST_EP3.md          # Matriz de delegación, verificación y checklist 100%
-│   └── evidencias/               # Capturas y salidas de consola de cada indicador (IE1-IE6)
-├── backend/                     # Microservicio API REST (Alexsander Rosales)
+│   ├── EP3_DOY0101_Estudiante.pdf    # Enunciado y rúbrica oficial de la evaluación (EP3)
+│   ├── CHECKLIST_EP3.md              # Matriz de delegación, verificación y checklist 100%
+│   ├── TOMA_DE_DECISIONES.md         # Informe técnico (IE4), métricas operativas y ética de IA
+│   ├── POLITICAS_CUMPLIMIENTO_Y_AUDITORIA_IE5.md # Políticas de calidad y Branch Protection (IE5)
+│   ├── PROTOCOLO_PRUEBA_FAIL_SAFE_IE6.md         # Protocolo y evidencia de falla crítica (IE6)
+│   ├── EVIDENCIAS_IE2_PAULO_RIVAS.md             # Evidencias de infraestructura AWS y K8s (IE2)
+│   ├── KEVIN_ENTREGA_EP3.md                      # Informe de entrega de observabilidad (IE1 e IE3)
+│   ├── KEVIN_ANALISIS_OBSERVABILIDAD.md          # Análisis de telemetría y correlación operativa
+│   ├── KEVIN_DASHBOARD_IE3.md                    # Especificación de paneles de Grafana
+│   ├── KEVIN_METRICAS.md                         # Catálogo de métricas y consultas PromQL
+│   ├── KEVIN_STACK_MONITOREO.md                  # Arquitectura del stack Prometheus/Grafana
+│   ├── KEVIN_LOGGING.md                          # Pipeline y formato de logs estructurados
+│   └── evidencias/                               # 10 Capturas PNG de alta resolución (IE4-IE6)
+├── backend/                          # Microservicio Backend REST MVC (Node.js)
 │   ├── src/
-│   │   ├── controllers/         # Controladores de catálogo y órdenes
-│   │   ├── middleware/          # CORS y logger HTTP estructurado
-│   │   ├── router.js            # Enrutador REST nativo
-│   │   └── server.js            # Servidor HTTP con healthcheck y métricas
+│   │   ├── controllers/              # Controladores de catálogo y órdenes
+│   │   ├── middleware/               # Logger HTTP estructurado y CORS
+│   │   ├── observability/            # Métricas Prometheus (/metrics) y logger JSON
+│   │   ├── router.js                 # Enrutador REST nativo
+│   │   └── server.js                 # Servidor HTTP con healthcheck (/api/health, /healthz)
 │   ├── tests/
-│   │   └── backend.test.js      # 10 Pruebas unitarias nativas (Node test runner)
-│   ├── Dockerfile               # Contenerización Multi-Stage (Kevin)
-│   ├── .dockerignore            # Exclusión de temporales y logs
-│   ├── package.json             # Scripts y metadatos
-│   └── README.md                # Documentación de endpoints
-├── frontend/                    # Cliente Web SPA Dark HUD (Kevin)
-│   ├── public/                  # Shell HTML e iconos
-│   ├── src/                     # Componentes, vistas SPA, catálogo y store
+│   │   ├── backend.test.js           # 10 Pruebas unitarias de endpoints y negocio
+│   │   └── observability.test.js     # 2 Pruebas de telemetría y logging estructurado
+│   ├── Dockerfile                    # Contenerización Multi-Stage con usuario no-root
+│   └── package.json                  # Scripts y dependencias (prom-client)
+├── frontend/                         # Cliente Web SPA y Servidor Gateway (Node.js)
+│   ├── public/                       # Shell HTML e iconos
+│   ├── src/                          # Componentes, vistas SPA, catálogo y store
+│   ├── observability/                # Métricas (/metrics), logger y trace propagation
 │   ├── tests/
-│   │   └── frontend.test.js     # 9 Pruebas unitarias nativas de interfaz
-│   ├── Dockerfile               # Contenerización Multi-Stage
-│   ├── .dockerignore            # Exclusión de dependencias
-│   ├── package.json             # Scripts de interfaz
-│   └── README.md                # Documentación del cliente
-├── docker-compose.yml           # Orquestación de servicios con healthchecks y redes (Paulo Rivas)
-├── k8s/                         # Manifiestos declarativos Kubernetes en AWS (Paulo Rivas)
-│   ├── namespace.yaml           # Aislamiento del namespace vicity
-│   ├── backend-deployment.yaml  # Réplicas, probes y resource limits
-│   ├── backend-service.yaml     # ClusterIP backend
-│   ├── frontend-deployment.yaml # Réplicas y configuración frontend
-│   ├── frontend-service.yaml    # NodePort frontend
-│   ├── ingress.yaml             # Enrutamiento Ingress / y /api
-│   └── kustomization.yaml       # Consolidación de recursos
-├── CHANGELOG.md                 # Registro semántico de versiones (Keep a Changelog)
-├── CODE_OF_CONDUCT.md           # Normas de conducta y colaboración
-├── CONTRIBUTING.md              # Convenciones de GitFlow, commits y PRs
-├── LICENSE.md                   # Licencia MIT
-└── README.md                    # Este documento maestro
+│   │   ├── frontend.test.js          # 10 Pruebas unitarias de componentes e interfaz
+│   │   └── observability.test.js     # 6 Pruebas del servidor gateway, salud y proxy
+│   ├── Dockerfile                    # Contenerización Multi-Stage
+│   └── package.json                  # Scripts y dependencias
+├── k8s/                              # Manifiestos declarativos Kubernetes en AWS (Paulo Rivas)
+│   ├── namespace.yaml                # Namespace aislado vicity
+│   ├── backend-deployment.yaml       # Deployment Backend con resource limits y probes
+│   ├── backend-service.yaml          # ClusterIP backend (puerto 3000)
+│   ├── frontend-deployment.yaml      # Deployment Frontend con probes
+│   ├── frontend-service.yaml         # NodePort frontend (puerto 80 / 30080)
+│   ├── ingress.yaml                  # Enrutamiento Ingress / y /api
+│   └── kustomization.yaml            # Consolidación de recursos
+├── observability/                    # Stack completo de observabilidad (Kevin Gallardo)
+│   ├── prometheus/                   # Configuración y reglas de alertas PromQL
+│   ├── grafana/                      # Dashboards aprovisionados (ep3-kevin-gallardo.json)
+│   ├── logging/                      # Pipeline de recolección FluentBit
+│   ├── blackbox/                     # Configuración de probes HTTP Blackbox Exporter
+│   └── kubernetes/                   # ServiceMonitors y scrape configs
+└── scripts/ie3/                      # Scripts de validación PromQL y extracción LCOV
 ```
 
 ---
@@ -149,13 +185,13 @@ flowchart TD
 * [Git](https://git-scm.com/) configurado localmente.
 
 ### 1. Ejecución de Pruebas Unitarias
-Ambas suites utilizan el motor nativo de pruebas de Node.js, ejecutándose sin dependencias pesadas:
+Ambas suites utilizan el motor nativo de pruebas de Node.js (`node --test`), ejecutándose sin dependencias externas complejas (28 pruebas automatizadas en total):
 ```bash
-# Probar el microservicio Backend (10 pruebas)
+# Probar el microservicio Backend (12 pruebas: endpoints + observabilidad)
 cd backend
 npm test
 
-# Probar la interfaz Frontend (14 pruebas)
+# Probar la interfaz Frontend (16 pruebas: componentes SPA + gateway estático + métricas)
 cd ../frontend
 npm test
 ```
@@ -234,12 +270,12 @@ Para el detalle completo de tareas, responsables, comandos de prueba y criterios
 
 | Indicador | Ponderación | Responsable | Criterio de Logro (100% Muy Buen Desempeño) | Estado |
 | :--- | :---: | :---: | :--- | :---: |
-| **IE1: Monitoreo & Logs** | **20%** | **Kevin** | Herramientas como Prometheus o AWS CloudWatch configuradas con visualización de logs estructurados, métricas de uso, errores y disponibilidad de todos los microservicios. | 🟡 En Desarrollo |
+| **IE1: Monitoreo & Logs** | **20%** | **Kevin** | Herramientas como Prometheus o AWS CloudWatch configuradas con visualización de logs estructurados, métricas de uso, errores y disponibilidad de todos los microservicios. | 🟢 Completado |
 | **IE2: Despliegue K8s AWS** | **20%** | **Paulo** | Despliegue eficaz de microservicios en clúster Kubernetes en AWS con configuraciones automatizadas de monitoreo, trazabilidad y observabilidad. | 🟢 Completado |
-| **IE3: Dashboards CI/CD** | **10%** | **Kevin** | Dashboards funcionales con las 4 métricas clave (tiempo de despliegue, cobertura, CPU/RAM, errores) integrados al proceso CI/CD. | 🟡 En Desarrollo |
-| **IE4: Documentación Técnica** | **10%** | **Alexsander** | Documentación clara de la integración de herramientas y justificación fundada de su aporte a la toma de decisiones técnicas. | 🟡 En Desarrollo |
-| **IE5: Cumplimiento y Auditoría**| **20%** | **Alexsander** | Políticas rigurosas con SonarCloud (`pruebaDevops3`), Branch Protection Rules y auditorías de seguridad automatizadas. | 🟡 En Desarrollo |
-| **IE6: Bloqueo Fallas Críticas** | **20%** | **Alexsander** | Mecanismos de validación automatizados que interrumpen el pipeline ante fallas críticas de seguridad o calidad (fail-on-error). | 🟡 En Desarrollo |
+| **IE3: Dashboards CI/CD** | **10%** | **Kevin** | Dashboards funcionales con las 4 métricas clave (tiempo de despliegue, cobertura, CPU/RAM, errores) integrados al proceso CI/CD. | 🟢 Completado |
+| **IE4: Documentación Técnica** | **10%** | **Alexsander** | Documentación clara de la integración de herramientas y justificación fundada de su aporte a la toma de decisiones técnicas. | 🟢 Completado |
+| **IE5: Cumplimiento y Auditoría**| **20%** | **Alexsander** | Políticas rigurosas con SonarCloud (`pruebaDevops3`), Branch Protection Rules y auditorías de seguridad automatizadas. | 🟢 Completado |
+| **IE6: Bloqueo Fallas Críticas** | **20%** | **Alexsander** | Mecanismos de validación automatizados que interrumpen el pipeline ante fallas críticas de seguridad o calidad (fail-on-error). | 🟢 Completado |
 
 > 📁 **Evidencias y Verificación Técnica:**
 > Todas las evidencias de ejecución, capturas y salidas de consola requeridas por la rúbrica se gestionan en [**`docs/CHECKLIST_EP3.md`**](./docs/CHECKLIST_EP3.md) y se almacenan en el directorio [**`docs/evidencias/`**](./docs/evidencias/).
@@ -271,7 +307,13 @@ En cumplimiento con la política institucional de Duoc UC sobre el uso ético de
 > *Nota institucional:* Sección obligatoria redactada de manera individual por cada integrante sin asistencia de IA al culminar la evaluación, detallando su aprendizaje en observabilidad, orquestación en la nube y gobernanza DevOps.
 
 ### 1. Reflexión de Alexsander Rosales (Tech Lead, Security & Governance Engineer)
-> *[Espacio reservado para redacción individual al cierre del encargo EP3]*
+A lo largo de este proyecto en **DOY0101**, asumir el rol de Tech Lead y responsable de la gobernanza y seguridad del pipeline me ha permitido comprender que DevOps no es simplemente la automatización de despliegues rápidos, sino la construcción de una disciplina de ingeniería donde la **confiabilidad, la prevención y la trazabilidad** son principios innegociables.
+
+Uno de los aprendizajes más profundos que obtuve fue comprender el verdadero valor del paradigma **Shift-Left Security**. Al implementar herramientas como **SonarCloud** y `npm audit` integradas de forma nativa en el flujo de GitHub Actions con un **Quality Gate estricto**, experimenté cómo la seguridad se transforma en una compuerta objetiva. Ver cómo el pipeline se interrumpe de manera incondicional ante una vulnerabilidad crítica (con código de salida `exit 1`), bloqueando físicamente el botón de merge a través de las Branch Protection Rules de GitHub, me demostró que el software seguro no se logra confiando en la buena voluntad de las personas, sino diseñando sistemas con arquitectura **fail-safe**: sistemas donde el fallo es visible de inmediato y la propagación del riesgo hacia producción resulta matemáticamente imposible.
+
+En el ámbito de la observabilidad, entender la correlación entre métricas operativas y calidad de código cambió mi perspectiva técnica. Una compuerta de calidad no termina cuando el código se despliega; continúa a través de la telemetría de Prometheus y CloudWatch. Diagnosticar cómo un error en el manejo del *Event Loop* o una fuga de memoria puede derivar en una degradación masiva de latencia o en la muerte de un contenedor por *OOMKilled* me enseñó que las métricas de observabilidad son la única fuente de verdad empírica para fundamentar decisiones complejas, tales como ordenar un rollback automatizado o redefinir los límites de CPU y memoria de un pod.
+
+Finalmente, coordinar las responsabilidades con Kevin (en dashboards y métricas) y Paulo (en la orquestación cloud con Kubernetes en AWS) representó un ejercicio de madurez profesional. Aprender a definir contratos claros de integración (como la exposición estandarizada del endpoint `/metrics` y las comprobaciones de salud en `/api/health`) fue la clave para que la infraestructura y el código ensamblaran sin fisuras. Esta experiencia en Duoc UC consolida mi convicción de que un ingeniero DevOps de excelencia debe ser capaz de fusionar una visión holística de la arquitectura de software con el rigor técnico necesario para proteger el negocio y los usuarios finales.
 
 ### 2. Reflexión de Kevin (Observability & Dashboards Engineer)
 > *[Espacio reservado para redacción individual al cierre del encargo EP3]*
