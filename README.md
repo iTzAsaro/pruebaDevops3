@@ -1,24 +1,25 @@
-# Microservicio DevOps — Evaluación Parcial N°2: Añadiéndole Complejidad a Nuestro Pipeline
+# Microservicio DevOps — Evaluación Parcial N°3: Observabilidad y Entornos Reales en DevOps
 
 > **Asignatura:** DOY0101 - Ingeniería DevOps  
 > **Institución:** Duoc UC  
-> **Evaluación:** Evaluación Parcial 2 (45% ponderación)  
-> **Estado:** Pipeline CI/CD 100% operativo, Quality Gate aprobado y despliegue simulado validado
+> **Evaluación:** Evaluación Parcial 3 (30% ponderación)  
+> **Estado:** 🟡 En Desarrollo / Implementación de Observabilidad, K8s en AWS y Gobernanza  
+> **Matriz y Checklist:** [docs/CHECKLIST_EP3.md](docs/CHECKLIST_EP3.md)
 
-[![CI/CD Pipeline](https://github.com/iTzAsaro/prueba-devops2/actions/workflows/ci.yml/badge.svg)](https://github.com/iTzAsaro/prueba-devops2/actions/workflows/ci.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=iTzAsaro_prueba-devops2&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=iTzAsaro_prueba-devops2)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=iTzAsaro_prueba-devops2&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=iTzAsaro_prueba-devops2)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=iTzAsaro_prueba-devops2&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=iTzAsaro_prueba-devops2)
+[![CI/CD Pipeline](https://github.com/iTzAsaro/pruebaDevops3/actions/workflows/ci.yml/badge.svg)](https://github.com/iTzAsaro/pruebaDevops3/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=iTzAsaro_pruebaDevops3&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=iTzAsaro_pruebaDevops3)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=iTzAsaro_pruebaDevops3&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=iTzAsaro_pruebaDevops3)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=iTzAsaro_pruebaDevops3&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=iTzAsaro_pruebaDevops3)
 
 ---
 
-## 👥 Equipo de Trabajo y Roles
+## 👥 Equipo de Trabajo y Roles (EP3)
 
-| Integrante | Rol en el Proyecto | Responsabilidad Principal en EP2 | Indicadores de Evaluación |
+| Integrante | Rol en el Proyecto | Responsabilidad Principal en EP3 | Indicadores de Evaluación |
 | :--- | :--- | :--- | :--- |
-| **Alexsander Rosales** | **Tech Lead & Security / CI Pipeline Core** | Orquestación del pipeline GitHub Actions, configuración de Dependabot, integración de análisis SAST (SonarCloud/Snyk), Quality Gates de bloqueo estricto y revisión de PRs. | **IE3 (Seguridad & Calidad)** |
-| **Kevin** | **Container & Testing Automation Engineer** | Optimización de `Dockerfile` con Multi-Stage builds, usuario no privilegiado (`USER node`), `.dockerignore`, suite de pruebas unitarias y reportes de cobertura en CI. | **IE1 (Docker) & IE2 (Testing)** |
-| **Paulo Rivas** | **DevOps & Orchestration Engineer** | Orquestación con `docker-compose.yml` (redes dedicadas, volúmenes, healthchecks), job de despliegue continuo (CD) en entorno simulado con trazabilidad y documentación técnica. | **IE4 (Despliegue) & IE5 (Orquestación)** |
+| **Paulo Rivas** | **Cloud & Infrastructure Engineer (AWS Specialist)** | Aprovisionamiento y despliegue orquestado en la nube AWS con Kubernetes, manifiestos K8s, exposición Ingress/LB y soporte de observabilidad cloud. | **IE2 (K8s en AWS)** & **IE1 (Cloud)** |
+| **Kevin** | **Observability & Dashboards Engineer** | Instrumentación de métricas de aplicación en microservicios (`/metrics` Prometheus), logging estructurado y creación de dashboards CI/CD con las 4 métricas clave. | **IE1 (Monitoreo & Logs)** & **IE3 (Dashboards)** |
+| **Alexsander Rosales** | **Tech Lead, Security & Governance Engineer** | Orquestación del pipeline CI/CD en GitHub Actions, Quality Gate estricto en SonarCloud, Branch Protection, corte ante fallas críticas y documentación técnica. | **IE5 (Cumplimiento)**, **IE6 (Fail-Safe)** & **IE4 (Docs)** |
 
 ---
 
