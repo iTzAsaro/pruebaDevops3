@@ -126,7 +126,7 @@ aws sts get-caller-identity
 ```
 ```json
 {
-    "UserId": "AROAUQIKWMYF6U52ABROT:user3752655=pau.rivasa",
+    "UserId": "AROA***[REDACTED]***:user3752655=pau.rivasa",
     "Account": "309796955659",
     "Arn": "arn:aws:sts::309796955659:assumed-role/voclabs/user3752655=pau.rivasa"
 }
