@@ -18,7 +18,7 @@ const errors = new Counter({
   labelNames: ['status_class'], registers: [registry]
 });
 for (const status_class of ['4xx', '5xx']) errors.inc({ status_class }, 0);
-new Gauge({
+const uptimeGauge = new Gauge({
   name: 'vicity_process_uptime_seconds', help: 'Node.js process uptime in seconds', registers: [registry],
   collect() { this.set(process.uptime()); }
 });
