@@ -1,33 +1,52 @@
-const { randomUUID } = require('node:crypto');
-const { writeSync } = require('node:fs');
+const crypto = require('node:crypto');
 
-const service = 'frontend';
-const requestIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+class TelemetryEmitter {
+  constructor(serviceIdentifier) {
+    this.tag = serviceIdentifier;
+    this.uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  }
 
-function assignRequestId(req, res) {
-  const incoming = req.headers['x-request-id'];
-  const requestId = typeof incoming === 'string' && incoming.length === 36 && requestIdPattern.test(incoming)
-    ? incoming : randomUUID();
-  res.setHeader('X-Request-Id', requestId);
-  return requestId;
+  emit(level, message, context = {}) {
+    const record = {
+      timestamp: new Date().toISOString(),
+      level,
+      service: this.tag,
+      message,
+      ...context
+    };
+    process.stdout.write(`${JSON.stringify(record)}\n`);
+  }
+
+  bindRequestId(req, res) {
+    const rawId = req.headers['x-request-id'];
+    const valid = typeof rawId === 'string' && rawId.length === 36 && this.uuidPattern.test(rawId);
+    const resolvedId = valid ? rawId : crypto.randomUUID();
+    res.setHeader('X-Request-Id', resolvedId);
+    return resolvedId;
+  }
+
+  installSafetyHarness() {
+    process.once('uncaughtException', (_err, reason) => {
+      try {
+        const payload = JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: 'ERROR',
+          service: this.tag,
+          message: 'Fatal runtime error',
+          origin: reason
+        });
+        process.stderr.write(`${payload}\n`);
+      } finally {
+        process.exit(1);
+      }
+    });
+  }
 }
 
-function log(level, message, fields = {}) {
-  console.log(JSON.stringify({ timestamp: new Date().toISOString(), level, service, message, ...fields }));
-}
+const frontendEmitter = new TelemetryEmitter('frontend');
 
-function monitorFatalErrors() {
-  // Do not resume after a fatal exception or print the raw error/stack.
-  process.once('uncaughtException', (_error, origin) => {
-    try {
-      writeSync(2, JSON.stringify({
-        timestamp: new Date().toISOString(), level: 'ERROR', service,
-        message: 'Fatal runtime error', origin
-      }) + '\n');
-    } finally {
-      process.exit(1);
-    }
-  });
-}
-
-module.exports = { assignRequestId, log, monitorFatalErrors };
+module.exports = {
+  assignRequestId: (req, res) => frontendEmitter.bindRequestId(req, res),
+  log: (level, msg, extra) => frontendEmitter.emit(level, msg, extra),
+  monitorFatalErrors: () => frontendEmitter.installSafetyHarness()
+};
