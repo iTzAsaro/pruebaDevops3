@@ -1,0 +1,13 @@
+title = "Reglas de Gitleaks para pruebaDevops3"
+
+[allowlist]
+description = "Permitir claves públicas de configuración y documentación de SonarCloud"
+paths = [
+  '''sonar-project\.properties''',
+  '''docs/.*'''
+]
+regexes = [
+  '''sonar\.projectKey=iTzAsaro_.*''',
+  '''iTzAsaro_pruebaDevops3''',
+  '''iTzAsaro_prueba-devops2'''
+]
