@@ -1,4 +1,4 @@
-name: CI/CD Pipeline - DevOps EP2
+name: CI/CD Pipeline - DevOps EP3
 
 on:
   push:
