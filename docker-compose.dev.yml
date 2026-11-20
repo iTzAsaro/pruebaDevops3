@@ -33,6 +33,7 @@ services:
     # server.js se lee del host en cada arranque; src/ y public/ en cada request.
     volumes:
       - ./frontend/server.js:/app/server.js
+      - ./frontend/observability:/app/observability
       - ./frontend/src:/app/src
       - ./frontend/public:/app/public
     command: ["node", "--watch", "server.js"]

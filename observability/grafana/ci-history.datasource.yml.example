@@ -1,0 +1,12 @@
+apiVersion: 1
+datasources:
+  - name: VI CITY CI History
+    uid: vicity-ci-history
+    type: prometheus
+    access: proxy
+    url: $VICITY_CI_QUERY_URL
+    editable: false
+    jsonData:
+      httpHeaderName1: Authorization
+    secureJsonData:
+      httpHeaderValue1: $VICITY_CI_QUERY_AUTHORIZATION

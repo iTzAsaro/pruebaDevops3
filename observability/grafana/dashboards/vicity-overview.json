@@ -1,0 +1,50 @@
+{
+  "uid": "vicity-overview",
+  "title": "VI CITY — Salud y tráfico",
+  "tags": ["vicity", "ie1"],
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "15s",
+  "time": {"from": "now-30m", "to": "now"},
+  "panels": [
+    {
+      "id": 1, "type": "timeseries", "title": "Disponibilidad HTTP (1 = OK)",
+      "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "vicity-prometheus"},
+      "targets": [{"refId": "A", "expr": "probe_success{job=\"vicity-http-probes\"}", "legendFormat": "{{check}}"}],
+      "fieldConfig": {"defaults": {"min": 0, "max": 1}, "overrides": []}
+    },
+    {
+      "id": 2, "type": "timeseries", "title": "Peticiones HTTP por segundo",
+      "gridPos": {"x": 12, "y": 0, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "vicity-prometheus"},
+      "targets": [{"refId": "A", "expr": "sum by (service) (rate(vicity_http_requests_total[$__rate_interval]))", "legendFormat": "{{service}}"}]
+    },
+    {
+      "id": 3, "type": "timeseries", "title": "Latencia p95 (segundos)",
+      "gridPos": {"x": 0, "y": 8, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "vicity-prometheus"},
+      "targets": [{"refId": "A", "expr": "histogram_quantile(0.95, sum by (service, le) (rate(vicity_http_request_duration_seconds_bucket[$__rate_interval])))", "legendFormat": "{{service}}"}],
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []}
+    },
+    {
+      "id": 4, "type": "timeseries", "title": "Errores HTTP por segundo",
+      "gridPos": {"x": 12, "y": 8, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "vicity-prometheus"},
+      "targets": [{"refId": "A", "expr": "sum by (service, status_class) (rate(vicity_http_errors_total[$__rate_interval]))", "legendFormat": "{{service}} {{status_class}}"}]
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "CPU de proceso (núcleos equivalentes)",
+      "gridPos": {"x": 0, "y": 16, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "vicity-prometheus"},
+      "targets": [{"refId": "A", "expr": "rate(process_cpu_seconds_total{job=\"vicity-apps\"}[$__rate_interval])", "legendFormat": "{{service}}"}]
+    },
+    {
+      "id": 6, "type": "timeseries", "title": "Memoria RSS del proceso",
+      "gridPos": {"x": 12, "y": 16, "w": 12, "h": 8},
+      "datasource": {"type": "prometheus", "uid": "vicity-prometheus"},
+      "targets": [{"refId": "A", "expr": "process_resident_memory_bytes{job=\"vicity-apps\"}", "legendFormat": "{{service}}"}],
+      "fieldConfig": {"defaults": {"unit": "bytes"}, "overrides": []}
+    }
+  ]
+}

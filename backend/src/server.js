@@ -5,7 +5,7 @@
 const http = require('node:http');
 const config = require('./config/constants');
 const { handleCors } = require('./middleware/cors');
-const { logRequest } = require('./middleware/logger');
+const { observe, serveMetrics } = require('./observability/metrics');
 const Router = require('./router');
 
 // Controladores
@@ -31,23 +31,21 @@ router.delete('/api/orders/:id', ordersController.deleteOrder);
 router.get('/api/metrics', ordersController.getMetrics);
 
 const server = http.createServer(async (req, res) => {
-  logRequest(req, res);
+  const pathname = (req.url || '/').split('?')[0];
+  const isMetrics = pathname === '/metrics' && req.method === 'GET';
+  const probe = isMetrics || pathname === '/api/health';
+  observe(req, res, () => probe ? pathname : req.routePattern || (req.method === 'OPTIONS' ? 'preflight' : 'unmatched'), !probe);
 
-  // Manejar CORS (retorna true si fue OPTIONS)
   if (handleCors(req, res)) return;
+  if (isMetrics) return serveMetrics(res);
 
   await router.handle(req, res);
 });
 
 if (require.main === module) {
-  server.listen(config.PORT, () => {
-    console.log(`====================================================`);
-    console.log(`🚀 [Backend] Microservicio API iniciado en el puerto ${config.PORT}`);
-    console.log(`📦 [Backend] Entorno: ${config.ENVIRONMENT} | Versión: ${config.VERSION}`);
-    console.log(`👤 [Backend] Desarrollador: ${config.AUTHOR}`);
-    console.log(`🔗 [Backend] Endpoints base: http://localhost:${config.PORT}/api`);
-    console.log(`====================================================`);
-  });
+  const { log, monitorFatalErrors } = require('./observability/logger');
+  monitorFatalErrors();
+  server.listen(config.PORT, () => log('INFO', 'HTTP server listening', { port: server.address().port }));
 }
 
 module.exports = server;

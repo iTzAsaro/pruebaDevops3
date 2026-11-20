@@ -1,0 +1,36 @@
+global:
+  scrape_interval: 15s
+  scrape_timeout: 5s
+  evaluation_interval: 15s
+
+rule_files:
+  - alerts.yml
+
+scrape_configs:
+  - job_name: vicity-apps
+    metrics_path: /metrics
+    honor_labels: true
+    static_configs:
+      - targets: ['backend:3000']
+        labels: {service: backend, environment: local}
+      - targets: ['frontend:5000']
+        labels: {service: frontend, environment: local}
+
+  - job_name: vicity-http-probes
+    metrics_path: /probe
+    params:
+      module: [http_get_200]
+    static_configs:
+      - targets: ['http://backend:3000/api/health']
+        labels: {service: backend, environment: local, check: backend_health}
+      - targets: ['http://frontend:5000/healthz']
+        labels: {service: frontend, environment: local, check: frontend_health}
+      - targets: ['http://frontend:5000/api/health']
+        labels: {service: frontend, environment: local, check: proxy_health}
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox:9115

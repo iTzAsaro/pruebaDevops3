@@ -1,6 +1,7 @@
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
+const { observe, serveMetrics } = require('./observability/metrics');
 
 const PORT = process.env.PORT || 5000;
 const BACKEND_URL = process.env.BACKEND_URL;
@@ -82,15 +83,30 @@ function resolveStaticFile (relativePath) {
 }
 
 const server = http.createServer((req, res) => {
+  const pathname = (req.url || '/').split('?')[0];
+  const isProxy = BACKEND_URL && req.url && req.url.startsWith('/api');
+  const localProbe = req.method === 'GET' && (pathname === '/metrics' || pathname === '/healthz');
+  const probe = localProbe || (isProxy && pathname === '/api/health');
+  const route = probe ? pathname : isProxy ? 'api_proxy' : pathname === '/' ? '/' : 'static';
+  const requestId = observe(req, res, () => route, !probe);
+  if (req.method === 'GET' && pathname === '/metrics') return serveMetrics(res);
+  if (req.method === 'GET' && pathname === '/healthz') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+    return res.end(JSON.stringify({
+      status: 'ok', uptimeSeconds: Math.floor(process.uptime()), timestamp: new Date().toISOString(),
+      dependencies: { backend: BACKEND_URL ? 'not_checked' : 'not_configured' }
+    }));
+  }
+
   // Proxy inverso hacia la API Backend cuando BACKEND_URL está definido
   if (BACKEND_URL && req.url && req.url.startsWith('/api')) {
     try {
       const targetUrl = new URL(req.url, BACKEND_URL);
       const proxyReq = http.request(targetUrl, {
         method: req.method,
-        headers: { ...req.headers, host: targetUrl.host }
+        headers: { ...req.headers, host: targetUrl.host, 'x-request-id': requestId }
       }, (proxyRes) => {
-        res.writeHead(proxyRes.statusCode, proxyRes.headers);
+        res.writeHead(proxyRes.statusCode, { ...proxyRes.headers, 'x-request-id': requestId });
         proxyRes.pipe(res);
       });
       proxyReq.on('error', () => {
@@ -139,11 +155,9 @@ const server = http.createServer((req, res) => {
 });
 
 if (require.main === module) {
-  server.listen(PORT, () => {
-    console.log(`[Frontend] Servidor web iniciado en http://localhost:${PORT}`);
-    console.log(`[Frontend] Plataforma VI CITY - Módulo Frontend`);
-    console.log(`[Frontend] Entorno: ${process.env.NODE_ENV || 'development'} | Cache: ${CACHE_CONTROL}`);
-  });
+  const { log, monitorFatalErrors } = require('./observability/logger');
+  monitorFatalErrors();
+  server.listen(PORT, () => log('INFO', 'HTTP server listening', { port: server.address().port }));
 }
 
 module.exports = server;
