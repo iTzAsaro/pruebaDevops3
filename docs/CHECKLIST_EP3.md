@@ -5,7 +5,7 @@
 > **Ponderación:** 30% de la nota final  
 > **Encargo:** *Observabilidad y entornos reales en DevOps*  
 > **Repositorio Oficial:** [iTzAsaro/pruebaDevops3](https://github.com/iTzAsaro/pruebaDevops3)  
-> **Estado Global del Proyecto:** 🟡 En Planificación / Ejecución Inicial
+> **Estado Global del Proyecto:** 🟢 Completado / Integrado al 100% en `main`
 
 ---
 
@@ -37,9 +37,9 @@ pie title Distribución de Ponderación EP3 (100%)
 
 | Indicador | Ponderación | Criterio para 100% (Muy Buen Desempeño) | Responsable | Estado |
 | :---: | :---: | :--- | :---: | :---: |
-| **IE1** | **20%** | Configura de manera completa y precisa herramientas como Prometheus o AWS CloudWatch, visualizando logs, métricas de uso, errores y disponibilidad de todos los microservicios involucrados. | **Kevin** | 🔴 Pendiente |
-| **IE2** | **20%** | Despliega eficazmente microservicios en entornos orquestados en la nube (Kubernetes / AWS), integrando de forma automatizada todas las configuraciones necesarias para el monitoreo, trazabilidad y observabilidad. | **Paulo** | 🟢 Completado |
-| **IE3** | **10%** | Crea dashboards funcionales y detallados con todas las métricas clave integradas al proceso CI/CD (tiempo despliegue, cobertura, CPU/RAM, errores), facilitando el análisis continuo del sistema. | **Kevin** | 🔴 Pendiente |
+| **IE1** | **20%** | Configura de manera completa y precisa herramientas como Prometheus o AWS CloudWatch, visualizando logs, métricas de uso, errores y disponibilidad de todos los microservicios involucrados. | **Kevin** | 🟢 Completado (PR #9 merged) |
+| **IE2** | **20%** | Despliega eficazmente microservicios en entornos orquestados en la nube (Kubernetes / AWS), integrando de forma automatizada todas las configuraciones necesarias para el monitoreo, trazabilidad y observabilidad. | **Paulo** | 🟢 Completado (PR #8 merged) |
+| **IE3** | **10%** | Crea dashboards funcionales y detallados con todas las métricas clave integradas al proceso CI/CD (tiempo despliegue, cobertura, CPU/RAM, errores), facilitando el análisis continuo del sistema. | **Kevin** | 🟢 Completado (PR #9 merged) |
 | **IE4** | **10%** | Documenta de forma clara y detallada la integración de herramientas de monitoreo, métricas y seguridad en el pipeline CI/CD, explicando su impacto en la toma de decisiones y mejora continua. | **Alexsander** | 🟢 Completado (Listo para Evidencia) |
 | **IE5** | **20%** | Aplica rigurosamente políticas de cumplimiento usando herramientas automatizadas (SonarQube, branch protection rules o scripts de auditoría), garantizando calidad, seguridad y trazabilidad. | **Alexsander** | 🟢 Completado (Reglas y SAST activos) |
 | **IE6** | **20%** | Implementa mecanismos de validación automatizados y efectivos que interrumpen el pipeline ante fallas críticas de seguridad o calidad, protegiendo el entorno productivo y asegurando cumplimiento normativo. | **Alexsander** | 🟢 Completado (Protocolo PoC Listo) |
@@ -74,36 +74,36 @@ pie title Distribución de Ponderación EP3 (100%)
 ---
 
 ### 📈 IE1: Monitoreo, Métricas y Logs — *Responsable: Kevin* (20%)
-- [ ] **Instrumentación de Microservicios**:
-  - [ ] Backend: Endpoint `/metrics` exportando métricas estándar de Prometheus (`prom-client` en Node.js: peticiones HTTP, latencia, códigos de estado, uso de heap).
-  - [ ] Backend: Endpoint `/api/health` reportando disponibilidad, uptime y estado de dependencias.
-  - [ ] Logs estructurados (formato JSON) en Backend y Frontend con timestamp, nivel (`INFO`, `WARN`, `ERROR`), endpoint y código HTTP.
-- [ ] **Stack de Monitoreo (Prometheus / AWS CloudWatch)**:
-  - [ ] Prometheus configurado con `scrape_configs` apuntando a los pods/servicios del microservicio.
-  - [ ] Recolección de logs configurada (CloudWatch Agent, FluentBit, Promtail o similar).
-  - [ ] Captura de errores de aplicación y códigos HTTP 4xx/5xx en tiempo real.
-  - [ ] Verificación de disponibilidad continua (*uptime check*).
-- [ ] **Criterio de Aceptación & Evidencias**:
-  - `EVIDENCIA_IE1_01`: Salida del endpoint `/metrics` en el microservicio.
-  - `EVIDENCIA_IE1_02`: Panel de targets en Prometheus / CloudWatch con estado `UP`.
-  - `EVIDENCIA_IE1_03`: Explorador de logs mostrando trazas estructuradas con errores y accesos.
-  - `EVIDENCIA_IE1_04`: Gráfico de disponibilidad y latencia del servicio respondiendo a tráfico.
+- [x] **Instrumentación de Microservicios**:
+  - [x] Backend: Endpoint `/metrics` exportando métricas estándar de Prometheus (`prom-client` en Node.js: peticiones HTTP, latencia, códigos de estado, uso de heap).
+  - [x] Backend: Endpoint `/api/health` y `/healthz` reportando disponibilidad, uptime y estado de dependencias.
+  - [x] Logs estructurados (formato JSON) en Backend y Frontend con timestamp, nivel (`INFO`, `WARN`, `ERROR`), endpoint y código HTTP.
+- [x] **Stack de Monitoreo (Prometheus / AWS CloudWatch)**:
+  - [x] Prometheus configurado con `scrape_configs` (`observability/prometheus/prometheus.yml`) apuntando a los pods/servicios del microservicio.
+  - [x] Recolección de logs configurada (`observability/logging/pipeline.conf` y FluentBit).
+  - [x] Captura de errores de aplicación y códigos HTTP 4xx/5xx en tiempo real.
+  - [x] Verificación de disponibilidad continua (*uptime check* con Blackbox Exporter).
+- [x] **Criterio de Aceptación & Evidencias**:
+  - [x] `EVIDENCIA_IE1_01`: Salida del endpoint `/metrics` en el microservicio (`docs/KEVIN_METRICAS.md`).
+  - [x] `EVIDENCIA_IE1_02`: Panel de targets en Prometheus / CloudWatch con estado `UP` (`docs/KEVIN_STACK_MONITOREO.md`).
+  - [x] `EVIDENCIA_IE1_03`: Explorador de logs mostrando trazas estructuradas con errores y accesos (`docs/KEVIN_LOGGING.md`).
+  - [x] `EVIDENCIA_IE1_04`: Gráfico de disponibilidad y latencia del servicio respondiendo a tráfico (`docs/KEVIN_ANALISIS_OBSERVABILIDAD.md`).
 
 ---
 
 ### 📊 IE3: Dashboards Personalizados Integrados a CI/CD — *Responsable: Kevin* (10%)
-- [ ] **Construcción del Dashboard (Grafana / CloudWatch Dashboard)**:
-  - [ ] **Métrica 1 — Tiempo de Despliegue (Deployment Duration)**: Duración histórica de las ejecuciones del pipeline CI/CD y despliegue en AWS.
-  - [ ] **Métrica 2 — Cobertura de Pruebas (Test Coverage)**: Porcentaje de cobertura de pruebas unitarias extraído de las ejecuciones de CI.
-  - [ ] **Métrica 3 — Uso de Recursos (CPU / Memoria)**: Consumo en tiempo real e histórico de los contenedores/pods en AWS.
-  - [ ] **Métrica 4 — Errores Registrados**: Tasa de errores HTTP (5xx / 4xx) y excepciones no controladas en el microservicio.
-- [ ] **Integración con CI/CD**:
-  - [ ] Envío o exportación de métricas de build/test desde GitHub Actions hacia la herramienta de métricas.
-  - [ ] Enlace o visualización del dashboard referenciado en el repositorio.
-- [ ] **Criterio de Aceptación & Evidencias**:
-  - `EVIDENCIA_IE3_01`: Captura completa del Dashboard mostrando los 4 paneles principales activos con datos reales.
-  - `EVIDENCIA_IE3_02`: Consulta o query PromQL / CloudWatch Metric Math utilizada para cada panel.
-  - `EVIDENCIA_IE3_03`: Exportación del archivo de definición del dashboard (`dashboard.json`).
+- [x] **Construcción del Dashboard (Grafana / CloudWatch Dashboard)**:
+  - [x] **Métrica 1 — Tiempo de Despliegue (Deployment Duration)**: Duración histórica de las ejecuciones del pipeline CI/CD y despliegue en AWS.
+  - [x] **Métrica 2 — Cobertura de Pruebas (Test Coverage)**: Porcentaje de cobertura de pruebas unitarias extraído de las ejecuciones de CI (`scripts/ie3/read-lcov.py`).
+  - [x] **Métrica 3 — Uso de Recursos (CPU / Memoria)**: Consumo en tiempo real e histórico de los contenedores/pods en AWS.
+  - [x] **Métrica 4 — Errores Registrados**: Tasa de errores HTTP (5xx / 4xx) y excepciones no controladas en el microservicio.
+- [x] **Integración con CI/CD**:
+  - [x] Envío o exportación de métricas de build/test desde GitHub Actions hacia la herramienta de métricas (`.github/workflows/ie3-metrics.yml`).
+  - [x] Enlace o visualización del dashboard referenciado en el repositorio (`docs/KEVIN_DASHBOARD_IE3.md`).
+- [x] **Criterio de Aceptación & Evidencias**:
+  - [x] `EVIDENCIA_IE3_01`: Captura completa del Dashboard mostrando los 4 paneles principales activos con datos reales.
+  - [x] `EVIDENCIA_IE3_02`: Consulta o query PromQL / CloudWatch Metric Math utilizada para cada panel.
+  - [x] `EVIDENCIA_IE3_03`: Exportación del archivo de definición del dashboard (`observability/grafana/dashboards/ep3-kevin-gallardo.json`).
 
 ---
 
@@ -195,9 +195,9 @@ docs/
 | Hito / Fase | Encargado | Ponderación | Estado | Validación |
 | :--- | :---: | :---: | :---: | :---: |
 | **Fase 1: Preparación del Repositorio y Configuración Sonar** | Alexsander | Transversal | 🟢 Completado | Repo `pruebaDevops3` activo y enlazado |
-| **Fase 2: Infraestructura y Despliegue en AWS (Kubernetes)** | Paulo | 20% | 🟢 Completado | Clúster y Pods corriendo en AWS |
-| **Fase 3: Instrumentación de Métricas, Logs y Dashboards** | Kevin | 30% | 🔴 Pendiente | Dashboards con 4 métricas activas |
-| **Fase 4: Políticas de Cumplimiento y Quality Gates** | Alexsander | 20% | 🟢 Completado | SonarCloud, Gitleaks & Branch Rules operativas |
-| **Fase 5: Demostración de Falla Crítica (Pipeline Stop)** | Alexsander | 20% | 🟢 Completado | PoC de bloqueo documentado y ejecutable |
-| **Fase 6: Documentación Técnica, Evidencias y Reflexiones** | Alexsander / Todos | 10% | 🟡 En Validación | Informe listo, esperando firmas/capturas |
-| **TOTAL** | **Equipo** | **100%** | **60%** | **Meta: Nota 7.0 (100% Logro)** |
+| **Fase 2: Infraestructura y Despliegue en AWS (Kubernetes)** | Paulo | 20% | 🟢 Completado | PR #8 integrado, Clúster y Pods corriendo en AWS |
+| **Fase 3: Instrumentación de Métricas, Logs y Dashboards** | Kevin | 30% | 🟢 Completado | PR #9 integrado, Dashboards con 4 métricas activas |
+| **Fase 4: Políticas de Cumplimiento y Quality Gates** | Alexsander | 20% | 🟢 Completado | SonarCloud (0% dup, 100% QA), Gitleaks & Branch Rules |
+| **Fase 5: Demostración de Falla Crítica (Pipeline Stop)** | Alexsander | 20% | 🟢 Completado | PR #7 PoC de bloqueo documentado y validado |
+| **Fase 6: Documentación Técnica, Evidencias y Reflexiones** | Alexsander / Todos | 10% | 🟢 Completado | 10 evidencias en PNG, informe técnico y reflexiones |
+| **TOTAL** | **Equipo** | **100%** | **🟢 100%** | **Meta: Nota 7.0 (100% Logro)** |
