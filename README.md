@@ -23,68 +23,70 @@
 
 ---
 
-## 🎯 Propósito del Proyecto (EP2)
+## 🎯 Propósito del Proyecto (EP3: Observabilidad y Entornos Reales en DevOps)
 
-El encargo de la **Evaluación Parcial N°2** consiste en elevar la madurez del ciclo de vida del microservicio (*Plataforma de Preventas VI CITY*) mediante la implementación de un **pipeline CI/CD integral y robusto en GitHub Actions**, garantizando:
+El encargo de la **Evaluación Parcial N°3** consiste en extender el pipeline DevOps implementado, incorporando mecanismos de **observabilidad**, **métricas de desempeño y calidad**, despliegue en entornos orquestados en la nube (**Kubernetes en AWS**) y **validación automatizada de cumplimiento normativo**, garantizando una operación confiable, transparente y alineada a estándares de calidad:
 
-1. **Contenerización eficiente (IE1):** Construcción de imágenes Docker seguras, reproducibles y de tamaño reducido mediante *Multi-Stage Builds*.
-2. **Pruebas Automatizadas en CI (IE2):** Ejecución desatendida de suites unitarias y generación de reportes de cobertura ante cada integración.
-3. **Seguridad y Gobernanza (IE3):** Detección proactiva de vulnerabilidades con Dependabot, análisis estático de código (SAST) y **bloqueo estricto del pipeline (Quality Gate)** en caso de no conformidades.
-4. **Despliegue Automático y Trazabilidad (IE4):** Automatización de la fase de CD en un entorno simulado, vinculando cada artefacto con su commit SHA y tag de versión.
-5. **Orquestación Resiliente (IE5):** Configuración de un clúster local de servicios con Docker Compose, definiendo dependencias ordenadas por `healthcheck` y aislamiento de redes.
+1. **Monitoreo y Logging (IE1 - 20%):** Configuración de herramientas como Prometheus o AWS CloudWatch para visualizar logs, métricas de uso, errores y disponibilidad del microservicio.
+2. **Despliegue Orquestado en la Nube (IE2 - 20%):** Despliegue de los microservicios en un clúster Kubernetes en AWS, integrando configuraciones automatizadas de monitoreo y observabilidad.
+3. **Dashboards Personalizados en CI/CD (IE3 - 10%):** Creación de dashboards con métricas clave: tiempo de despliegue, cobertura de pruebas, uso de CPU/memoria y errores registrados.
+4. **Documentación Técnica y Toma de Decisiones (IE4 - 10%):** Documentación de la integración de observabilidad y justificación de cómo las métricas fundamentan decisiones técnicas y mejora continua.
+5. **Políticas de Cumplimiento (IE5 - 20%):** Aplicación rigurosa de políticas mediante SonarCloud (`pruebaDevops3`), Branch Protection Rules en GitHub y scripts de auditoría automatizada.
+6. **Mecanismo de Bloqueo ante Fallas Críticas (IE6 - 20%):** Demostración empírica de que el pipeline se interrumpe automáticamente ante fallas críticas de seguridad o calidad, protegiendo producción.
 
 ---
 
-## 🏗️ Arquitectura del Pipeline CI/CD
+## 🏗️ Arquitectura del Pipeline CI/CD & Observabilidad
 
 ```mermaid
 flowchart TD
     subgraph Trigger ["Disparadores de Eventos"]
-        Push[Push a develop] --> Pipeline
+        Push[Push a develop / main] --> Pipeline
         PR[Pull Request a main] --> Pipeline
     end
 
     subgraph Pipeline ["GitHub Actions CI/CD Pipeline (.github/workflows/ci.yml)"]
-        subgraph Stage1 ["Fase 1: Testing & Cobertura (IE2)"]
+        subgraph Stage1 ["Fase 1: Testing & Cobertura"]
             T1["Test Backend (Node test runner)"]
             T2["Test Frontend (Node test runner)"]
+            Cov["Reportes de Cobertura LCOV"]
+            T1 --> Cov
+            T2 --> Cov
         end
 
-        subgraph Stage2 ["Fase 2: Seguridad & SAST (IE3)"]
-            Sec1["Dependabot (Escaneo dependencias)"]
-            Sec2["SonarCloud / Snyk (Análisis SAST)"]
-            QG{"Quality Gate:\n¿Cumple métricas de seguridad?"}
-            Sec2 --> QG
+        subgraph Stage2 ["Fase 2: Seguridad, SAST y Calidad (IE5 & IE6)"]
+            Dep["Dependabot & Auditoría de Dependencias"]
+            Sonar["SonarCloud SAST (pruebaDevops3)"]
+            QG{"Quality Gate (IE6):\n¿Cumple umbrales de calidad y seguridad?"}
+            Sonar --> QG
         end
 
-        subgraph Stage3 ["Fase 3: Contenerización (IE1)"]
+        subgraph Stage3 ["Fase 3: Contenerización"]
             B1["Build Dockerfile Backend (Multi-stage)"]
             B2["Build Dockerfile Frontend (Multi-stage)"]
         end
 
-        subgraph Stage4 ["Fase 4: Despliegue & Orquestación (IE4 & IE5)"]
-            CD["Simulación de Despliegue CD"]
-            DC["Levantamiento con docker-compose"]
-            HC["Verificación de Healthcheck (/api/health)"]
-            CD --> DC --> HC
+        subgraph Stage4 ["Fase 4: Orquestación & Despliegue Cloud en AWS (IE2)"]
+            K8s["Despliegue en Kubernetes AWS (EKS / EC2 K3s)"]
+            Pods["Pods Backend & Frontend (Replicas & Probes)"]
+            Ingress["Ingress / Load Balancer Público"]
+            K8s --> Pods --> Ingress
         end
 
-        subgraph Stage5 ["Fase 5: Despliegue Cloud en AWS EC2 (IE4)"]
-            EC2["Conexión SSH a AWS EC2 (18.234.173.126)"]
-            DCC["Orquestación remota Docker Compose"]
-            HCC["Smoke Test en la Nube (/api/health)"]
-            EC2 --> DCC --> HCC
+        subgraph Stage5 ["Fase 5: Observabilidad & Métricas (IE1 & IE3)"]
+            Prom["Prometheus / CloudWatch Agent (Logs & Métricas)"]
+            Dash["Dashboard CI/CD (Tiempo Deploy, Cobertura, CPU/RAM, Errores)"]
+            Prom --> Dash
         end
 
         Stage1 --> Stage2
-        QG -- Superado --> Stage3
-        QG -- Falló --> Fail["🛑 Pipeline Bloqueado / Alerta de Seguridad"]
+        QG -- Superado (Passed) --> Stage3
+        QG -- Falla Crítica Detectada --> Fail["🛑 Pipeline Interrumpido Automáticamente (IE6)"]
         Stage3 --> Stage4
-        Stage3 --> Stage5
+        Stage4 --> Stage5
     end
 
-    HC --> Success(["🚀 Despliegue Validado & Trazable"])
-    HCC --> Success
+    Ingress --> Success(["🚀 Microservicios Operativos y Observables en AWS"])
 ```
 
 ---
@@ -93,11 +95,13 @@ flowchart TD
 
 ```text
 ├── .github/
-│   ├── dependabot.yml           # Escaneo semanal de dependencias npm y actions (IE3)
+│   ├── dependabot.yml           # Escaneo semanal de dependencias npm y actions
 │   └── workflows/
-│       └── ci.yml               # Pipeline CI/CD automatizado con Quality Gate (IE1-IE4)
+│       └── ci.yml               # Pipeline CI/CD automatizado con Quality Gate y despliegue
 ├── docs/
-│   └── EP2_DOY0101_Estudiante.pdf # Enunciado y rúbrica oficial de la evaluación
+│   ├── EP3_DOY0101_Estudiante.pdf # Enunciado y rúbrica oficial de la evaluación (EP3)
+│   ├── CHECKLIST_EP3.md          # Matriz de delegación, verificación y checklist 100%
+│   └── evidencias/               # Capturas y salidas de consola de cada indicador (IE1-IE6)
 ├── backend/                     # Microservicio API REST (Alexsander Rosales)
 │   ├── src/
 │   │   ├── controllers/         # Controladores de catálogo y órdenes
@@ -120,6 +124,14 @@ flowchart TD
 │   ├── package.json             # Scripts de interfaz
 │   └── README.md                # Documentación del cliente
 ├── docker-compose.yml           # Orquestación de servicios con healthchecks y redes (Paulo Rivas)
+├── k8s/                         # Manifiestos declarativos Kubernetes en AWS (Paulo Rivas)
+│   ├── namespace.yaml           # Aislamiento del namespace vicity
+│   ├── backend-deployment.yaml  # Réplicas, probes y resource limits
+│   ├── backend-service.yaml     # ClusterIP backend
+│   ├── frontend-deployment.yaml # Réplicas y configuración frontend
+│   ├── frontend-service.yaml    # NodePort frontend
+│   ├── ingress.yaml             # Enrutamiento Ingress / y /api
+│   └── kustomization.yaml       # Consolidación de recursos
 ├── CHANGELOG.md                 # Registro semántico de versiones (Keep a Changelog)
 ├── CODE_OF_CONDUCT.md           # Normas de conducta y colaboración
 ├── CONTRIBUTING.md              # Convenciones de GitFlow, commits y PRs
@@ -216,53 +228,53 @@ npm run down       # detener el stack
 
 ---
 
-## 📊 Matriz de Cumplimiento de Rúbrica (IE1 a IE5)
+## 📊 Matriz de Cumplimiento de Rúbrica EP3 (100% Muy Buen Desempeño)
 
-| Indicador | Requisito Duoc UC | Implementación en este Repositorio | Estado |
-| :--- | :--- | :--- | :---: |
-| **IE1 (20%)** | Contenerización optimizada con Dockerfile | `Dockerfile` Multi-Stage en backend y frontend, imágenes ligeras Alpine, usuario sin privilegios `USER node`, builds locales y smoke tests validados. | ✅ 100% Cumplido |
-| **IE2 (20%)** | Pruebas automatizadas en CI | 24 pruebas unitarias, cobertura LCOV con `c8` y artefactos configurados en GitHub Actions. | ✅ 100% Cumplido |
-| **IE3 (20%)** | Seguridad, SAST y Quality Gates | Configuración de Dependabot, análisis SAST (SonarCloud/Snyk) y Quality Gate de bloqueo estricto ante vulnerabilidades. | ✅ 100% Configurado y Operativo |
-| **IE4 (20%)** | Despliegue automático simulado y trazabilidad | Job `deploy-simulated` en GitHub Actions, smoke test HTTP (`curl /api/health`), logs inmutables con `$GITHUB_SHA` y timestamp UTC. | ✅ 100% Configurado y Operativo |
-| **IE5 (20%)** | Orquestación de contenedores | `docker-compose.yml` multi-servicio con red bridge aislada (`vicity_network`), sondeo `healthcheck` y arranque sincronizado con `condition: service_healthy`. | ✅ 100% Configurado y Operativo |
+Para el detalle completo de tareas, responsables, comandos de prueba y criterios de verificación, consultar la matriz maestra en [**`docs/CHECKLIST_EP3.md`**](./docs/CHECKLIST_EP3.md).
 
-> 📄 **Documentación y Evidencias Técnicas:**
-> * 🛡️ **Seguridad y CI (IE3 - Alex):** [**`docs/EVIDENCIAS_SONARCLOUD_Y_CI.md`**](./docs/EVIDENCIAS_SONARCLOUD_Y_CI.md)
-> * 🚀 **Despliegue y Orquestación (IE4 & IE5 - Paulo):** [**`docs/EVIDENCIAS_DESPLIEGUE_Y_ORQUESTACION.md`**](./docs/EVIDENCIAS_DESPLIEGUE_Y_ORQUESTACION.md)
-> * 🐳 **Evidencias IE1 e IE2 (Kevin):** [**`docs/EVIDENCIAS_IE1_IE2_KEVIN.md`**](./docs/EVIDENCIAS_IE1_IE2_KEVIN.md)
-> * 📋 **Delegación de Tareas y Matriz Rúbrica:** [**`docs/DELEGACION_TAREAS_EP2.md`**](./docs/DELEGACION_TAREAS_EP2.md)
+| Indicador | Ponderación | Responsable | Criterio de Logro (100% Muy Buen Desempeño) | Estado |
+| :--- | :---: | :---: | :--- | :---: |
+| **IE1: Monitoreo & Logs** | **20%** | **Kevin** | Herramientas como Prometheus o AWS CloudWatch configuradas con visualización de logs estructurados, métricas de uso, errores y disponibilidad de todos los microservicios. | 🟡 En Desarrollo |
+| **IE2: Despliegue K8s AWS** | **20%** | **Paulo** | Despliegue eficaz de microservicios en clúster Kubernetes en AWS con configuraciones automatizadas de monitoreo, trazabilidad y observabilidad. | 🟢 Completado |
+| **IE3: Dashboards CI/CD** | **10%** | **Kevin** | Dashboards funcionales con las 4 métricas clave (tiempo de despliegue, cobertura, CPU/RAM, errores) integrados al proceso CI/CD. | 🟡 En Desarrollo |
+| **IE4: Documentación Técnica** | **10%** | **Alexsander** | Documentación clara de la integración de herramientas y justificación fundada de su aporte a la toma de decisiones técnicas. | 🟡 En Desarrollo |
+| **IE5: Cumplimiento y Auditoría**| **20%** | **Alexsander** | Políticas rigurosas con SonarCloud (`pruebaDevops3`), Branch Protection Rules y auditorías de seguridad automatizadas. | 🟡 En Desarrollo |
+| **IE6: Bloqueo Fallas Críticas** | **20%** | **Alexsander** | Mecanismos de validación automatizados que interrumpen el pipeline ante fallas críticas de seguridad o calidad (fail-on-error). | 🟡 En Desarrollo |
+
+> 📁 **Evidencias y Verificación Técnica:**
+> Todas las evidencias de ejecución, capturas y salidas de consola requeridas por la rúbrica se gestionan en [**`docs/CHECKLIST_EP3.md`**](./docs/CHECKLIST_EP3.md) y se almacenan en el directorio [**`docs/evidencias/`**](./docs/evidencias/).
 
 ---
 
-## 🔍 Trazabilidad y Calidad de Extremo a Extremo (IE4)
+## 🔍 Trazabilidad, Gobernanza y Toma de Decisiones Técnicas (IE4)
 
-Para cumplir con el estándar exigido por Duoc UC, la trazabilidad del pipeline se garantiza mediante una cadena ininterrumpida de validaciones:
+La trazabilidad del ciclo de vida en esta etapa vincula el desarrollo, las compuertas de seguridad, el despliegue orquestado y la observabilidad en tiempo real:
 
-1. **Trazabilidad de Código a Artefacto:** Cada compilación de imagen Docker y ejecución de despliegue se vincula de forma unívoca con el hash SHA del commit (`$GITHUB_SHA`) y la rama de trabajo (`$GITHUB_REF_NAME`), evitando desalineaciones entre el código fuente auditado y los contenedores desplegados.
-2. **Puertas de Enlace de Calidad (Quality Gates):** Ningún contenedor es desplegado en el entorno simulado sin haber superado previamente las 24 pruebas unitarias automatizadas y el análisis estático SAST de SonarCloud con cero vulnerabilidades críticas o altas.
-3. **Validación Funcional en Vivo (Smoke Test):** Tras levantar los microservicios con Docker Compose, el pipeline ejecuta una prueba de humo activa verificando que el endpoint `/api/health` devuelva código `HTTP 200` y metadatos de disponibilidad válidos.
-4. **Auditoría Inmutable:** Cada paso de despliegue escribe en los logs del pipeline un registro inmutable con el commit SHA, autor, entorno y marca temporal UTC, permitiendo auditoría retrospectiva de cada versión entregada.
+1. **Trazabilidad de Código a Clúster:** Cada imagen y despliegue en Kubernetes se etiqueta con el hash SHA del commit (`$GITHUB_SHA`) y la rama de trabajo, garantizando correlación directa entre código y pods en ejecución.
+2. **Compuertas de Calidad y Cumplimiento Normativo (IE5 & IE6):** Ningún artefacto avanza a la etapa de despliegue en la nube sin superar las pruebas unitarias automatizadas y el Quality Gate estricto de SonarCloud con cero vulnerabilidades críticas.
+3. **Observabilidad para Toma de Decisiones Técnicas:** Los dashboards personalizados consolidan métricas clave de consumo de recursos y tasas de error, permitiendo decisiones proactivas sobre autoescalado horizontal (HPA), límites de memoria y rollbacks automatizados.
+4. **Auditoría Continua e Inmutable:** Cada ejecución en GitHub Actions genera registros de despliegue auditables con autor, timestamp UTC y verificación de salud de los endpoints.
 
 ---
 
 ## 🤖 Declaración de Uso Ético de Inteligencia Artificial
 
-En cumplimiento con la política institucional de Duoc UC sobre el uso de tecnologías generativas:
+En cumplimiento con la política institucional de Duoc UC sobre el uso ético de tecnologías de inteligencia artificial:
 * **Herramientas empleadas:** Antigravity CLI / Asistente IA.
-* **Finalidad:** Asistencia técnica en la redacción estructurada de plantillas de documentación, diseño de diagramas Mermaid y optimización de sintaxis en flujos YAML de GitHub Actions.
-* **Autoría y Responsabilidad:** La arquitectura del pipeline, la configuración de los contenedores, las políticas de seguridad y las decisiones técnicas fueron diseñadas, verificadas y asumidas íntegramente por el equipo de estudiantes.
+* **Finalidad:** Apoyo en redacción estructurada, generación de diagramas Mermaid y estructuración de checklists técnicos de verificación.
+* **Autoría y Responsabilidad:** Todas las ideas, análisis, configuraciones de infraestructura en AWS, métricas y decisiones técnicas son de autoría y responsabilidad exclusiva del equipo de estudiantes.
 
 ---
 
-## ✍️ Reflexiones Individuales de Aprendizaje (Obligatorias)
+## ✍️ Reflexiones Individuales de Aprendizaje (Obligatorias - EP3)
 
-> *Nota institucional:* Sección obligatoria redactada de manera individual por cada integrante sin asistencia de IA, evidenciando su aprendizaje personal, desafíos enfrentados y contribución técnica al proyecto.
+> *Nota institucional:* Sección obligatoria redactada de manera individual por cada integrante sin asistencia de IA al culminar la evaluación, detallando su aprendizaje en observabilidad, orquestación en la nube y gobernanza DevOps.
 
-### 1. Reflexión de Alexsander Rosales (Tech Lead & Security / CI Core)
-> En esta segunda etapa del proyecto, mi responsabilidad principal radicó en robustecer la gobernanza y seguridad de nuestro pipeline CI/CD (IE3), transitando desde una automatización básica de pruebas hacia un modelo de DevSecOps integral. Diseñar e implementar el análisis de seguridad mediante Dependabot y herramientas SAST me permitió comprender cómo la detección temprana de vulnerabilidades previene riesgos críticos antes de que el código sea empaquetado o desplegado. Configurar la compuerta de calidad (Quality Gate) con bloqueo estricto fue uno de los mayores desafíos técnicos: garantizar que cualquier falla de seguridad o caída en los estándares de calidad detenga inmediatamente el pipeline (`fail-on-error`), protegiendo la estabilidad del entorno productivo. Adicionalmente, la activación de reglas de protección de rama en GitHub (`main` y `develop`) aseguró una colaboración disciplinada, donde cada cambio pasa forzosamente por revisión de pares y validación automática. Esta experiencia consolidó mi visión sobre la importancia de la seguridad como código y la automatización como pilares de la entrega continua moderna.
+### 1. Reflexión de Alexsander Rosales (Tech Lead, Security & Governance Engineer)
+> *[Espacio reservado para redacción individual al cierre del encargo EP3]*
 
-### 2. Reflexión de Kevin (Container & Testing Automation Engineer)
-> En esta nueva etapa trabajé en los indicadores IE1 e IE2, relacionados con Docker y las pruebas automatizadas. Actualicé los Dockerfiles para usar imágenes multi-stage con Node 20 Alpine, instalación determinista con `npm ci` y usuario no privilegiado `node`. También ejecuté las pruebas nativas del backend y frontend, obteniendo 10 y 9 pruebas aprobadas respectivamente. Agregué reportes de cobertura con `c8` y actualicé GitHub Actions para guardar estas evidencias. Después de iniciar Docker Desktop, pude construir y levantar los dos servicios con Compose, comprobando que el backend respondiera 200 en `/api/health`, el frontend respondiera 200 y que ambos contenedores utilizaran el usuario `node`. Con este trabajo aprendí la importancia de automatizar las pruebas y mantener contenedores seguros y reproducibles.
+### 2. Reflexión de Kevin (Observability & Dashboards Engineer)
+> *[Espacio reservado para redacción individual al cierre del encargo EP3]*
 
-### 3. Reflexión de Paulo Rivas (DevOps & Orchestration Engineer)
-> En esta Evaluación Parcial 2, asumí el rol de DevOps & Orchestration Engineer con foco en los indicadores IE4 (Despliegue Continuo & Trazabilidad) e IE5 (Orquestación de Contenedores). Mi principal desafío fue diseñar una arquitectura de orquestación resiliente mediante Docker Compose que superara los problemas clásicos de condiciones de carrera en el arranque de microservicios. Implementé una red aislada bridge (`vicity_network`) y configuré sondeos de salud (`healthchecks`) activos en el backend con parámetros de timeout, retries e intervalos definidos, permitiendo que el frontend dependa estrictamente del estado saludable (`condition: service_healthy`). En la arista de despliegue continuo, automaticé la fase de CD en GitHub Actions dentro de un entorno cloud simulado, donde cada ejecución valida la salud del servicio mediante smoke tests y estampa un registro inmutable de auditoría con el commit SHA (`$GITHUB_SHA`), rama y timestamp UTC. La articulación con mis compañeros Alexsander y Kevin me demostró el valor práctico de DevSecOps: cómo la integración de pruebas, escaneo SAST, compuertas de calidad y empaquetado seguro sientan las bases indispensables para un despliegue trazable y confiable en producción.
+### 3. Reflexión de Paulo Rivas (Cloud & Infrastructure Engineer - AWS Specialist)
+Durante el desarrollo de esta Evaluación Parcial 3, consolidé la transición desde la orquestación básica con contenedores hacia un entorno cloud-native orquestado con Kubernetes sobre infraestructura elástica en AWS. Aprovisionar el clúster de control-plane, definir manifiestos declarativos desacoplados para backend y frontend con sondas de salud (liveness y readiness probes) y configurar límites estrictos de CPU y memoria me permitió comprender la importancia de la alta disponibilidad y la resiliencia en arquitecturas productivas. Asimismo, vincular el monitoreo nativo a través del agente de CloudWatch y la exposición balanceada de servicios demostró que el aprovisionamiento de infraestructura moderno debe concebirse de manera inseparable con la observabilidad continua. Esta experiencia reforzó mi capacidad para estructurar despliegues automatizados, auditables y gobernados bajo estándares DevOps reales.

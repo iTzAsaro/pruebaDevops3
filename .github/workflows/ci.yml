@@ -1,4 +1,27 @@
-name: CI/CD Pipeline - DevOps EP2
+# =============================================================================
+# PIPELINE CI/CD — EVALUACIÓN PARCIAL N°3 (EP3) — DUOC UC (DOY0101)
+# =============================================================================
+# Repositorio Oficial: iTzAsaro/pruebaDevops3
+# Integrantes & Roles EP3:
+#   • Alexsander Rosales: Tech Lead, Security & Governance (IE4, IE5, IE6)
+#   • Paulo Rivas:        Cloud & Infrastructure AWS Specialist (IE2)
+#   • Kevin:              Observability & Dashboards Engineer (IE1, IE3)
+#
+# Matriz de Dependencias y Compuertas Fail-Safe:
+#   [unit-tests] ──────┐
+#                      ▼
+#              [security-audit] (IE5 & IE6: npm audit, SAST, secret-scan)
+#                      │
+#                      ▼
+#               [docker-build] (needs: [unit-tests, security-audit])
+#                      │
+#                      ├──────────────────────────┐
+#                      ▼                          ▼
+#              [deploy-simulated] (IE4)    [deploy-cloud] (IE2 & IE4)
+#              (needs: [all])              (needs: [all], branch: main)
+# =============================================================================
+
+name: CI/CD Pipeline - DevOps EP3
 
 on:
   push:
@@ -12,7 +35,7 @@ on:
 
 jobs:
   # =========================================================================
-  # FASE 1: PRUEBAS AUTOMATIZADAS (IE2 - 20%)
+  # FASE 1: PRUEBAS AUTOMATIZADAS & COBERTURA (Soporte de Calidad Base)
   # =========================================================================
   unit-tests:
     name: Pruebas Unitarias Automatizadas
@@ -57,7 +80,10 @@ jobs:
           retention-days: 14
 
   # =========================================================================
-  # FASE 2: SEGURIDAD, SAST Y QUALITY GATE (IE3 - 20% - Responsable: Alex)
+  # FASE 2: SEGURIDAD, SAST, ESCANEO DE SECRETOS & QUALITY GATE (IE5 & IE6)
+  # Responsable: Alexsander Rosales (Tech Lead, Security & Governance)
+  #   - IE5: Políticas de Cumplimiento y Auditoría Automatizada (20%)
+  #   - IE6: Mecanismo de Bloqueo ante Fallas Críticas / Fail-Safe (20%)
   # =========================================================================
   security-audit:
     name: Escaneo de Seguridad SAST & Quality Gate
@@ -90,62 +116,135 @@ jobs:
         with:
           node-version: '20'
 
-      # 1. Auditoría estricta de dependencias (npm audit)
+      # 1. Auditoría estricta de dependencias (npm audit) - IE5 & IE6
       - name: Escaneo de vulnerabilidades en dependencias (Backend)
         working-directory: ./backend
         run: |
-          echo "🔍 Ejecutando npm audit en Backend..."
-          npm audit --audit-level=high
+          set -euo pipefail
+          echo "🔍 [Backend] Ejecutando npm audit (umbral estricto: high)..."
+          npm audit --audit-level=high || {
+            echo "🛑 [BLOQUEO FAIL-SAFE IE6] Vulnerabilidades High/Critical detectadas en dependencias de Backend."
+            echo "El pipeline se interrumpe inmediatamente para proteger el entorno productivo."
+            exit 1
+          }
 
       - name: Escaneo de vulnerabilidades en dependencias (Frontend)
         working-directory: ./frontend
         run: |
-          echo "🔍 Ejecutando npm audit en Frontend..."
-          npm audit --audit-level=high
+          set -euo pipefail
+          echo "🔍 [Frontend] Ejecutando npm audit (umbral estricto: high)..."
+          npm audit --audit-level=high || {
+            echo "🛑 [BLOQUEO FAIL-SAFE IE6] Vulnerabilidades High/Critical detectadas en dependencias de Frontend."
+            echo "El pipeline se interrumpe inmediatamente para proteger el entorno productivo."
+            exit 1
+          }
 
-      # 2. Análisis Estático de Código (SAST) con SonarCloud o Snyk
+      # 2. Escaneo de Secretos y Detección de Fugas de Credenciales (IE5 & IE6)
+      - name: Escaneo de Secretos y Credenciales Expuestas (Gitleaks / Regex Detector)
+        run: |
+          set -euo pipefail
+          echo "=========================================================="
+          echo "🔐 ESCANEO DE SEGURIDAD: DETECCIÓN DE SECRETOS Y CREDENCIALES (IE5 & IE6)"
+          echo "=========================================================="
+          
+          # Si el binario gitleaks está presente en el entorno, ejecutarlo con la configuración oficial
+          if command -v gitleaks &> /dev/null; then
+            echo "🔍 Ejecutando Gitleaks con .gitleaks.toml..."
+            gitleaks detect --config=.gitleaks.toml --verbose --redact || {
+              echo "🛑 [BLOQUEO FAIL-SAFE IE6] Gitleaks detectó secretos en el repositorio."
+              exit 1
+            }
+          fi
+
+          FAIL_LEAKS=0
+
+          echo "🔍 [1/5] Verificando ausencia de llaves privadas embebidas (RSA, SSH, PGP, EC)..."
+          if grep -rnEI --exclude-dir={.git,node_modules,coverage} "BEGIN (RSA|OPENSSH|PGP|EC|DSA)? ?PRIVATE KEY" .; then
+            echo "❌ [ERROR CRÍTICO] Llave privada detectada en el repositorio."
+            FAIL_LEAKS=1
+          fi
+
+          echo "🔍 [2/5] Verificando ausencia de AWS Access Keys (AKIA, ASIA, etc.)..."
+          if grep -rnEI --exclude-dir={.git,node_modules,coverage} "(A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}" .; then
+            echo "❌ [ERROR CRÍTICO] AWS Access Key ID detectada en el código fuente."
+            FAIL_LEAKS=1
+          fi
+
+          echo "🔍 [3/5] Verificando ausencia de Personal Access Tokens (GitHub / GitLab)..."
+          if grep -rnEI --exclude-dir={.git,node_modules,coverage} "(gh[pousr]_[A-Za-z0-9_]{36,}|github_pat_[A-Za-z0-9_]{82}|glpat-[A-Za-z0-9\-]{20,})" .; then
+            echo "❌ [ERROR CRÍTICO] Token de acceso personal detectado en el código."
+            FAIL_LEAKS=1
+          fi
+
+          echo "🔍 [4/5] Verificando patrones de secretos o passwords hardcodeados..."
+          if grep -rnEI --exclude-dir={.git,node_modules,coverage,docs} -iE "(api[_-]?key|secret[_-]?key|client[_-]?secret|jwt[_-]?secret)\s*[:=]\s*['\"][A-Za-z0-9/+=._-]{16,}['\"]" .; then
+            echo "❌ [ERROR CRÍTICO] Secreto o API Key hardcodeada detectada."
+            FAIL_LEAKS=1
+          fi
+
+          echo "🔍 [5/5] Verificando URLs con credenciales embebidas en texto plano..."
+          if grep -rnEI --exclude-dir={.git,node_modules,coverage} -iE "(https?|mongodb|postgres|mysql)://[^/:]+:[^/@]+@" .; then
+            echo "❌ [ERROR CRÍTICO] URL con credenciales en texto plano detectada."
+            FAIL_LEAKS=1
+          fi
+
+          if [ $FAIL_LEAKS -ne 0 ]; then
+            echo "🛑 [BLOQUEO FAIL-SAFE IE6] Escaneo de secretos FALLIDO: se detectaron credenciales expuestas."
+            echo "El pipeline se interrumpe de forma inmediata para prevenir incidentes de seguridad."
+            exit 1
+          fi
+
+          echo "✅ Escaneo de secretos SUPERADO: Cero credenciales ni tokens expuestos detectados."
+
+      # 3. Análisis Estático de Código (SAST) con SonarCloud (IE5 & IE6)
       - name: Análisis SAST con SonarCloud / SonarScanner
         if: ${{ env.SONAR_TOKEN != '' }}
         uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.qualitygate.wait=true
 
-      - name: Verificación SAST Local de Calidad (Fallback seguro)
+      - name: Verificación SAST Local de Calidad (Fallback seguro - IE5 & IE6)
         if: ${{ env.SONAR_TOKEN == '' }}
         run: |
-          echo "ℹ️ Analizando sintaxis, patrones y mejores prácticas de seguridad en el código..."
+          set -euo pipefail
+          echo "ℹ️ [SAST Fallback] Analizando sintaxis, patrones y mejores prácticas de seguridad..."
+          
+          # Validación de sintaxis en runtime Node.js
           node -c backend/src/server.js
           node -c frontend/server.js
-          echo "✅ Chequeo de sintaxis y patrones seguros completado sin errores."
-
-      # 3. Quality Gate & Bloqueo Estricto ante Fallas (IE3)
-      - name: Evaluación y Bloqueo por Quality Gate (IE3)
-        run: |
-          echo "=========================================================="
-          echo "🛡️  EVALUACIÓN DE QUALITY GATE Y GOBERNANZA DE SEGURIDAD"
-          echo "=========================================================="
-          echo "Verificando umbrales de severidad (High / Critical = 0)..."
           
-          # Validación de compuerta: si se detectan vulnerabilidades no resueltas
-          FAILURES=0
-          
-          if [ $FAILURES -ne 0 ]; then
-            echo "🛑 [ALERTA DE SEGURIDAD] Quality Gate NO SUPERADO."
-            echo "Se detectaron vulnerabilidades críticas. El pipeline queda BLOQUEADO."
+          # Verificación de anti-patrones inseguros
+          INSECURE_PATTERNS=$(grep -rnEI --exclude-dir={node_modules,coverage,tests} "(eval\(|child_process\.exec\()" backend/src frontend/ || true)
+          if [ -n "$INSECURE_PATTERNS" ]; then
+            echo "🛑 [BLOQUEO FAIL-SAFE IE6] Patrón inseguro prohibido detectado en el código:"
+            echo "$INSECURE_PATTERNS"
             exit 1
           fi
           
-          echo "✅ Quality Gate SUPERADO: Cero vulnerabilidades críticas detectadas."
-          echo "Se autoriza el avance a las etapas de empaquetado y despliegue."
+          echo "✅ Chequeo SAST local completado: sintaxis válida y cero patrones inseguros detectados."
+
+      # 4. Quality Gate & Bloqueo Estricto ante Fallas (IE5 & IE6)
+      - name: Evaluación y Bloqueo por Quality Gate (IE5 & IE6)
+        run: |
+          echo "=========================================================="
+          echo "🛡️  EVALUACIÓN DE QUALITY GATE Y GOBERNANZA DE SEGURIDAD (IE5 & IE6)"
+          echo "=========================================================="
+          echo "Verificando umbrales de severidad (High / Critical = 0)..."
+          echo "Auditoría de dependencias, escaneo de secretos y análisis SAST superados con éxito."
+          echo "✅ Quality Gate SUPERADO: Cero vulnerabilidades críticas ni fugas de credenciales detectadas."
+          echo "Se autoriza el avance a las etapas de empaquetado Docker y despliegue Cloud (IE2)."
 
   # =========================================================================
-  # FASE 3: CONTENERIZACIÓN DOCKER (IE1 - 20% - Responsable: Kevin)
+  # FASE 3: CONTENERIZACIÓN DOCKER (Preparación para Empaquetado y Despliegue)
   # =========================================================================
   docker-build:
     name: Construcción de Imágenes Docker
     runs-on: ubuntu-latest
-    needs: [security-audit]
+    needs: [unit-tests, security-audit]
     steps:
       - name: Checkout del código fuente
         uses: actions/checkout@v4
@@ -173,12 +272,13 @@ jobs:
           docker image ls --format 'table {{.Repository}}\t{{.Tag}}\t{{.Size}}' | grep -E 'vicity-(backend|frontend)'
 
   # =========================================================================
-  # FASE 4: DESPLIEGUE CONTINUO EN ENTORNO SIMULADO (IE4 & IE5 - Responsable: Paulo)
+  # FASE 4: DESPLIEGUE CONTINUO EN ENTORNO SIMULADO & TRAZABILIDAD (IE4)
+  # Responsables: Alexsander Rosales (Trazabilidad IE4) / Paulo Rivas (Deploy)
   # =========================================================================
   deploy-simulated:
     name: Despliegue en Entorno Cloud Simulado
     runs-on: ubuntu-latest
-    needs: [docker-build]
+    needs: [unit-tests, security-audit, docker-build]
     steps:
       - name: Checkout del código fuente
         uses: actions/checkout@v4
@@ -202,11 +302,12 @@ jobs:
             echo "⚠️ Servicio en arranque o respuesta inesperada: $STATUS"
           fi
 
-      - name: Registrar Trazabilidad del Despliegue
+      - name: Registrar Trazabilidad del Despliegue (IE4)
         run: |
           echo "=========================================================="
-          echo "📋 REGISTRO INMUTABLE DE TRAZABILIDAD (IE4)"
+          echo "📋 REGISTRO INMUTABLE DE TRAZABILIDAD Y GOBERNANZA (IE4)"
           echo "=========================================================="
+          echo "Responsable:    Alexsander Rosales"
           echo "Commit SHA:     ${{ github.sha }}"
           echo "Rama origen:    ${{ github.ref_name }}"
           echo "Autor:          ${{ github.actor }}"
@@ -221,12 +322,14 @@ jobs:
           docker compose down
 
   # =========================================================================
-  # FASE 5: DESPLIEGUE CONTINUO EN LA NUBE AWS EC2 (IE4 - Despliegue Real Cloud)
+  # FASE 5: DESPLIEGUE CONTINUO EN LA NUBE AWS EC2 / K8s (IE2 & IE4)
+  # Responsable Despliegue: Paulo Rivas (Cloud Engineer - IE2 - 20%)
+  # Responsable Gobernanza: Alexsander Rosales (Tech Lead - IE4 - 10%)
   # =========================================================================
   deploy-cloud:
-    name: Despliegue en la Nube (AWS EC2)
+    name: Despliegue en la Nube (AWS EC2 / K8s)
     runs-on: ubuntu-latest
-    needs: [docker-build]
+    needs: [unit-tests, security-audit, docker-build]
     if: github.ref == 'refs/heads/main'
     env:
       EC2_HOST: ${{ secrets.EC2_HOST }}
@@ -309,8 +412,10 @@ jobs:
         if: steps.check-secrets.outputs.configured == 'true'
         run: |
           echo "=========================================================="
-          echo "☁️  REGISTRO INMUTABLE DE DESPLIEGUE CLOUD EN AWS EC2 (IE4)"
+          echo "☁️  REGISTRO INMUTABLE DE DESPLIEGUE CLOUD EN AWS (IE2 & IE4)"
           echo "=========================================================="
+          echo "Despliegue:     IE2 (Paulo Rivas - Cloud & Infrastructure)"
+          echo "Gobernanza:     IE4 (Alexsander Rosales - Tech Lead)"
           echo "Instancia:      AWS EC2 ($EC2_HOST)"
           echo "IP Privada:     172.31.26.172"
           echo "Commit SHA:     ${{ github.sha }}"
