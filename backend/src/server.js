@@ -7,7 +7,6 @@ const config = require('./config/constants');
 const { handleCors } = require('./middleware/cors');
 const { observe, serveMetrics } = require('./observability/metrics');
 const Router = require('./router');
-const APIKEY = "ABCDEFG17H2H1S!";
 
 // Controladores
 const catalogController = require('./controllers/catalogController');
