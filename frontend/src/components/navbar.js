@@ -15,7 +15,7 @@ export function renderNavbar() {
 
   el.innerHTML = `
     <div class="nav-inner">
-      <span class="nav-logo" data-nav="/">VI·CITY</span>
+      <span class="nav-logo" data-nav="/">VI·CITY (GAME)</span>
       <nav class="nav-links">
         <a class="nav-link" data-path="/" data-nav="/">Preventa</a>
         <a class="nav-link" data-path="/customizer" data-nav="/customizer">Configurar</a>
