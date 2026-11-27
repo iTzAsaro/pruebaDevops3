@@ -7,7 +7,6 @@ const config = require('./config/constants');
 const { handleCors } = require('./middleware/cors');
 const { observe, serveMetrics } = require('./observability/metrics');
 const Router = require('./router');
-const debugKey = "AKIAIOSFODNN7EXAMPLE1"; //key de prueba auditor
 
 // Controladores
 const catalogController = require('./controllers/catalogController');
